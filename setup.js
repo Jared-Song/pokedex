@@ -27,7 +27,9 @@ async function renderPokemon(id) {
   );
 
   renderContainer.innerHTML += `<div class = "pokemon-render-result-container container center column"
-      style = "${getPokemonBorderStyle(pokemon.types)};">
+      onMouseOver = "${setPokemonBorderMouseOver(pokemon.types)}"
+      onMouseOut = "${setPokemonBorderMouseOut(pokemon.types)}"
+    >
     <div class = "pokedex-sprite-container">
       <img class = "pokedex-sprite" src = "${
         pokemon.sprites.versions["generation-v"]["black-white"].animated[
@@ -41,18 +43,28 @@ async function renderPokemon(id) {
   </div>`;
 }
 
-function getPokemonBorderStyle(types) {
+function setPokemonBorderMouseOut(types) {
   if (types.length == 1) {
-    return "border: 2px solid " + pokemonTypeColours[types[0].type.name];
-  } else {
+    return "this.style.border = '2px solid white'";
+  }
+  return "this.style.borderImage = 'linear-gradient(#FFFFFF, #FFFFFF) 1'";
+}
+
+function setPokemonBorderMouseOver(types) {
+  if (types.length == 1) {
     return (
-      "border-image: linear-gradient(45deg," +
+      "this.style.border = '2px solid " +
       pokemonTypeColours[types[0].type.name] +
-      "," +
-      pokemonTypeColours[types[1].type.name] +
-      ") 10;"
+      "'"
     );
   }
+  return (
+    "this.style.borderImage = 'linear-gradient(90deg," +
+    pokemonTypeColours[types[0].type.name] +
+    "," +
+    pokemonTypeColours[types[1].type.name] +
+    ") 1'"
+  );
 }
 
 function renderPokemonTypes(types) {
