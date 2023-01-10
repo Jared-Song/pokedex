@@ -1,0 +1,160 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Outfit", sans-serif;
+}
+
+body {
+  background: #f6f8fc;
+  padding: 0 10vw;
+  height: 100vh;
+  font-family: "Outfit", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: #011030;
+  margin: 5px;
+  text-align: center;
+}
+
+span {
+  color: #8f9396;
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.container {
+  border-radius: 20px;
+  box-shadow: #ededed 0 10px 10px;
+  padding: 15px;
+  background-color: white;
+}
+
+input {
+  border: none;
+  font-size: 18px;
+  flex: 1;
+}
+
+/*Pokedex List*/
+#pokedex-list {
+  margin-right: 350px;
+  width: 100%;
+}
+
+#search-bar-container {
+  margin: 40px 10px;
+}
+
+#start-search-button-container {
+  background-color: #ff5350;
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: #ff535088 5px 5px 15px;
+  color: white;
+}
+
+#start-search-button-container:hover {
+  opacity: 0.8;
+  box-shadow: #ff53509c 3px 3px 13px;
+}
+
+#start-search-button-icon {
+  height: 70%;
+  width: 70%;
+}
+
+#pokedex-list-render-container {
+  display: flex;
+  flex-flow: wrap row;
+  justify-content: center;
+}
+
+.pokemon-render-result-container {
+  flex: 0.5;
+  min-width: 20%;
+  margin: 10px;
+  margin-top: 60px;
+  padding-top: 35px;
+  position: relative;
+  cursor: pointer;
+  border: 2px solid white;
+  border-radius: 0px;
+}
+
+.pokemon-render-result-container:hover .pokedex-sprite {
+  transform: scale(1.1);
+}
+
+.pokedex-sprite-container {
+  height: 96px;
+  width: 96px;
+  display: block;
+  justify-content: center;
+  top: -60px;
+  position: absolute;
+}
+
+.pokedex-sprite {
+  top: -5px;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.pokemon-type-container {
+  border-radius: 5px;
+  padding: 2px 8px;
+  border-color: #fff;
+  margin: 5px;
+  margin-top: 10px;
+  font-family: "Lato", sans-serif;
+  font-size: 10px;
+}
+
+/*Current Pokemon*/
+#current-pokemon-container {
+  width: 320px;
+  margin: 10px;
+  height: 82vh;
+  position: fixed;
+  right: calc(10vw - 20px);
+  padding: 0 15px;
+  text-align: center;
+  bottom: 0;
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
