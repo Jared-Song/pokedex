@@ -1,14 +1,18 @@
 let totalPokemon = 0;
-let pokemonIndex = 387;
-let n = 10;
+let pokemonIndex = 395;
+let n = 5;
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
 async function setup() {
   renderPokeballSearchIcon();
-
+  setupTypes();
   let response = await fetch(url);
   let responseAsJson = await response.json();
   totalPokemon = responseAsJson.count;
+
+  // for (let i = 1; i <= 10 + n; i++) {
+  //   renderPokemon(i);
+  // }
 
   for (let i = pokemonIndex; i <= pokemonIndex + n; i++) {
     // pokemon id starts at 1
@@ -20,15 +24,15 @@ async function renderPokemon(id) {
   let url = "https://pokeapi.co/api/v2/pokemon/" + id;
   let response = await fetch(url);
   let pokemon = await response.json();
-  console.log(pokemon);
+  // console.log(pokemon);
 
   const renderContainer = document.getElementById(
     "pokedex-list-render-container"
   );
 
-  renderContainer.innerHTML += `<div class = "pokemon-render-result-container container center column"
+  renderContainer.innerHTML += `<div onclick = "displayPokemonInfo(${id})" class = "pokemon-render-result-container container center column"
       onMouseOver = "${setPokemonBorderMouseOver(pokemon.types)}"
-      onMouseOut = "${setPokemonBorderMouseOut(pokemon.types)}"
+      onMouseOut = "${setPokemonBorderMouseOut(pokemon.types.length)}"
     >
     <div class = "pokedex-sprite-container">
       <img class = "pokedex-sprite" src = "${
@@ -43,8 +47,8 @@ async function renderPokemon(id) {
   </div>`;
 }
 
-function setPokemonBorderMouseOut(types) {
-  if (types.length == 1) {
+function setPokemonBorderMouseOut(length) {
+  if (length == 1) {
     return "this.style.border = '2px solid white'";
   }
   return "this.style.borderImage = 'linear-gradient(#FFFFFF, #FFFFFF) 1'";
