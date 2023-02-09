@@ -73,11 +73,14 @@ async function fetchPokemonInfo(id) {
   console.log("weaknesses:", getTypeWeaknesses(pokemon.types));
   console.log("exp:", pokemon.base_experience);
   console.log("stats:", getStats(pokemon.stats));
-  console.log("evolution chain: ", getEvolutionChain(pokemon));
+  console.log("evolution chain: ", getEvolutionChain(pokemon.name, species));
 }
 
-function getEvolutionChain(pokemon) {
-  return "test";
+async function getEvolutionChain(name, species) {
+  const urlEvolutionChain = species["evolution_chain"]["url"];
+  const evolutionChainResponse = await fetch(urlEvolutionChain);
+  const evolutionChain = await evolutionChainResponse.json();
+  return console.log(evolutionChain);
 }
 
 function getStats(stats) {
