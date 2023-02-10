@@ -1,5 +1,5 @@
 let totalPokemon = 0;
-let pokemonIndex = 395;
+let pokemonIndex = 132;
 let n = 5;
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
