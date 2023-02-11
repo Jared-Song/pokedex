@@ -8,22 +8,89 @@ function displayPokemonInfo(id) {
   // renderPokemonInfo(id);
 }
 
-async function setupTypes() {
+async function setupTypesWeaknesses() {
   const urlAllTypes = "https://pokeapi.co/api/v2/type";
   const allTypesResponse = await fetch(urlAllTypes);
   const allTypes = await allTypesResponse.json();
-  allTypes.results.forEach(async (type) => {
-    setupType(type);
+
+  for (const type of allTypes.results) {
+    await setupTypeWeaknesses(type);
+  }
+}
+
+async function setupTypeWeaknesses(typeObj) {
+  const urlType = typeObj.url;
+  const typeResponse = await fetch(urlType);
+  const type = await typeResponse.json();
+
+  const doubleDamageFrom = type.damage_relations.double_damage_from;
+  const halfDamageFrom = type.damage_relations.half_damage_from;
+
+  allTypes[typeObj.name] = [doubleDamageFrom, halfDamageFrom];
+}
+
+async function setPokemonTypes(typesObj) {
+  const types = typesObj.map((typeObj) => typeObj.type.name);
+  return types;
+}
+
+function formatAbilityName(name) {
+  // capitalises first letters and removes hyphens
+  return name
+    .replace(/\b\w/g, function (l) {
+      return l.toUpperCase();
+    })
+    .replace(/-/g, " ");
+}
+
+async function setPokemonAbilities(abilitiesObj) {
+  const element = document.getElementById("current-pokemon-abilities");
+  element.innerHTML = "";
+
+  abilitiesObj.forEach((abilityObj) => {
+    let abilityName = formatAbilityName(abilityObj.ability.name);
+    const hiddenClass = abilityObj.is_hidden
+      ? 'style="outline: 1px solid red"'
+      : "";
+    const iconHtml = abilityObj.is_hidden
+      ? '<i class="fas fa-eye-slash"></i>'
+      : "";
+
+    element.innerHTML += `
+      <div class="width-100 column center margin-5">
+        <div class="pokemon-info-container" ${hiddenClass}>
+          ${abilityName}
+          ${iconHtml}             
+        </div>
+      </div>
+    `;
   });
 }
 
-async function setupType(typeObj) {
-  let urlType = typeObj.url;
-  let typeResponse = await fetch(urlType);
-  let type = await typeResponse.json();
-  let double_dmg_from = type.damage_relations.double_damage_from;
-  let half_dmg_from = type.damage_relations.half_damage_from;
-  allTypes[typeObj.name] = [double_dmg_from, half_dmg_from];
+async function setPokemonStats(stats) {
+  let statArr = {};
+  let total = 0;
+
+  stats.forEach((statObj) => {
+    total += statObj.base_stat;
+    statArr[statObj.stat.name] = statObj.base_stat;
+  });
+
+  statArr.total = total;
+
+  const statIds = [
+    "hp",
+    "attack",
+    "defense",
+    "special-attack",
+    "special-defense",
+    "speed",
+    "total",
+  ];
+  statIds.forEach((statId) => {
+    document.getElementById(`current-pokemon-stats-${statId}`).innerHTML =
+      statArr[statId];
+  });
 }
 
 async function fetchPokemonInfo(id) {
@@ -34,30 +101,16 @@ async function fetchPokemonInfo(id) {
   const pokemon = await pokemonResponse.json();
   const species = await pokemonSpeciesResponse.json();
 
+  const pokemonName =
+    pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+
   console.log("pokemon");
   console.log(pokemon);
   console.log("species:");
   console.log(species);
 
-  // img (static), gender
-  // number
-  // name
-  // title
-  // types
-  // pokedex entry
-  // abilities
-  // height, weight
-  // weaknesses, base exp
-  // stats: hp, atk, def, spA, spD, speed, total
-  // evolution chain
-  // prev / next pokemon
   console.log("POKEMON INFO:");
   console.log(pokemon.sprites.other["official-artwork"].front_default);
-  console.log("#" + id);
-  let pokemonName = pokemon.name;
-  console.log(pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1));
-  console.log(species.genera["7"].genus);
-  console.log(species.flavor_text_entries["0"].flavor_text);
   console.log(
     "ability:",
     pokemon.abilities["0"].ability.name,
@@ -70,74 +123,86 @@ async function fetchPokemonInfo(id) {
     ",is_hidden?:",
     pokemon.abilities["1"].is_hidden
   );
-  console.log("height:", pokemon.height / 10, "m");
-  console.log("weight:", pokemon.weight / 10, "kg");
   console.log("weaknesses:", getTypeWeaknesses(pokemon.types));
-  console.log("exp:", pokemon.base_experience);
-  console.log("stats:", getStats(pokemon.stats));
   console.log("evolution chain: ", await getEvolutionChain(species));
   console.log("next/prev pokemons: ", await getNeighbourPokemons(id));
+
+  // setting elements
+  document.getElementById("current-pokemon-id").innerHTML = "#" + id;
+  document.getElementById("current-pokemon-name").innerHTML =
+    pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
+  document.getElementById("current-pokemon-title").innerHTML =
+    species.genera["7"].genus;
+  document.getElementById("current-pokemon-types").innerHTML =
+    await setPokemonTypes(pokemon.types);
+  setPokemonAbilities(pokemon.abilities);
+
+  document.getElementById("current-pokemon-flavour-text").innerHTML =
+    species.flavor_text_entries["1"].flavor_text;
+
+  document.getElementById("current-pokemon-height").innerHTML =
+    pokemon.height / 10 + "m";
+
+  document.getElementById("current-pokemon-weight").innerHTML =
+    pokemon.weight / 10 + "kg";
+
+  document.getElementById("current-pokemon-base-exp").innerHTML =
+    pokemon.base_experience;
+  setPokemonStats(pokemon.stats);
 }
 
 async function getEvolutionChain(species) {
   const urlEvolutionChain = species.evolution_chain.url;
   const evolutionChainResponse = await fetch(urlEvolutionChain);
   const evolutionChain = await evolutionChainResponse.json();
+
+  let evolutionArr = [];
   let chain = evolutionChain.chain;
-  let evolutionArr = [chain.species.name];
-  // console.log(chain);
-  while (chain.evolves_to.length > 0) {
-    chain = chain.evolves_to["0"];
+
+  while (chain) {
     evolutionArr.push(chain.species.name);
+    chain = chain.evolves_to[0];
   }
+
   return evolutionArr;
 }
 
 async function getNeighbourPokemons(id) {
-  neighbourIds = [
+  const neighbourIds = [
     (id + maxIndex - 1) % maxIndex || maxIndex, // left id
     (id + 1) % maxIndex, // right id
   ];
 
-  let neighbours = [];
-  neighbourIds.forEach(async (neighbourId) => {
-    let neighbourResponse = await fetch(pokemonApi + neighbourId);
-    let neighbourPokemon = await neighbourResponse.json();
-    neighbours.push([
-      neighbourId,
-      neighbourPokemon.name,
-      neighbourPokemon.sprites.versions["generation-v"]["black-white"].animated
-        .front_default,
-    ]);
-  });
+  const neighbours = await Promise.all(
+    neighbourIds.map(async (neighbourId) => {
+      const neighbourResponse = await fetch(pokemonApi + neighbourId);
+      const neighbourPokemon = await neighbourResponse.json();
+      return [
+        neighbourId,
+        neighbourPokemon.name,
+        neighbourPokemon.sprites.versions["generation-v"]["black-white"]
+          .animated.front_default,
+      ];
+    })
+  );
+
   return neighbours;
 }
 
-function getStats(stats) {
-  let statArr = {};
-  let total = 0;
-  stats.forEach((statObj) => {
-    total += statObj.base_stat;
-    statArr[statObj.stat.name] = statObj.base_stat;
-  });
-  statArr.total = total;
-  return statArr;
-}
-
 function getTypeWeaknesses(types) {
-  let dbl_damage_from = new Set();
-  let half_dmg_from = new Set();
+  const dbl_damage_from = new Set();
+  const half_damage_from = new Set();
+
   types.forEach((typeObj) => {
-    [dbl_dmg, half_dmg] = allTypes[typeObj.type.name];
-    dbl_dmg.forEach((dbl_dmg_type) => {
-      dbl_damage_from.add(dbl_dmg_type.name);
-    });
-    half_dmg.forEach((half_dmg_type) => {
-      half_dmg_from.add(half_dmg_type.name);
-    });
+    const [double_damage, half_damage] = allTypes[typeObj.type.name];
+
+    double_damage.forEach((type) => dbl_damage_from.add(type.name));
+    half_damage.forEach((type) => half_damage_from.add(type.name));
   });
-  for (const elem of half_dmg_from) {
-    dbl_damage_from.delete(elem);
+
+  for (const type of half_damage_from) {
+    dbl_damage_from.delete(type);
   }
+
   return dbl_damage_from;
 }

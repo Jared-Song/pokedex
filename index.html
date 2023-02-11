@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>PokeDex</title>
+    <title>PokéDex</title>
     <script src="setup.js"></script>
     <script src="select-pokemon.js"></script>
     <link rel="stylesheet" href="style.css" />
@@ -17,13 +17,122 @@
   <body onload="setup()" class="row">
     <div id="pokedex-list" class="column">
       <div id="search-bar-container" class="row container margin-40">
-        <input id="search-input" placeholder="Search your Pokèmon!" />
+        <input id="search-input" placeholder="Search your Pokémon!" />
         <div id="start-search-button-container" class="center"></div>
       </div>
 
       <div id="pokedex-list-render-container"></div>
     </div>
 
-    <div id="current-pokemon-container" class="container column"></div>
+    <div id="current-pokemon-container" class="container column">
+      <div id="current-pokemon-img"></div>
+      <div id="current-pokemon-info">
+        <span id="current-pokemon-id"></span>
+        <h2 id="current-pokemon-name"></h2>
+        <span id="current-pokemon-title"></span>
+        <div id="current-pokemon-types"></div>
+        <h4>Pokédex Entry</h4>
+        <span id="current-pokemon-flavour-text"></span>
+        <div class="row center"></div>
+
+        <!--Abilities-->
+        <div id="current-pokemon-abilities-container">
+          <h4>Abilities</h4>
+          <div id="current-pokemon-abilities" class="row center"></div>
+        </div>
+
+        <!--Height and Weight-->
+        <div class="row center">
+          <div class="width-100 column center margin-5">
+            <h4>Height</h4>
+            <div
+              id="current-pokemon-height"
+              class="pokemon-info-container"
+            ></div>
+          </div>
+          <div class="width-100 column center margin-5">
+            <h4>Weight</h4>
+            <div
+              id="current-pokemon-weight"
+              class="pokemon-info-container"
+            ></div>
+          </div>
+        </div>
+
+        <!--Weaknesses and Base Exp-->
+        <div class="row center">
+          <div class="width-100 column center margin-5">
+            <h4>Weaknesses</h4>
+            <div
+              id="current-pokemon-weaknesses"
+              class="pokemon-info-container"
+            ></div>
+          </div>
+          <div class="width-100 column center margin-5">
+            <h4>Base Exp</h4>
+            <div
+              id="current-pokemon-base-exp"
+              class="pokemon-info-container"
+            ></div>
+          </div>
+        </div>
+
+        <!--Stats-->
+        <h4>Stats</h4>
+        <div class="row center">
+          <div class="current-pokemon-stats-container column">
+            <div class="current-pokemon-stats-icon" style="background: #df2140">
+              HP
+            </div>
+            <h5 id="current-pokemon-stats-hp"></h5>
+          </div>
+          <div class="current-pokemon-stats-container column">
+            <div class="current-pokemon-stats-icon" style="background: #ff994d">
+              ATK
+            </div>
+            <h5 id="current-pokemon-stats-attack"></h5>
+          </div>
+          <div class="current-pokemon-stats-container column">
+            <div class="current-pokemon-stats-icon" style="background: #fedc52">
+              DEF
+            </div>
+            <h5 id="current-pokemon-stats-defense"></h5>
+          </div>
+          <div class="current-pokemon-stats-container column">
+            <div class="current-pokemon-stats-icon" style="background: #85ddff">
+              SpA
+            </div>
+            <h5 id="current-pokemon-stats-special-attack"></h5>
+          </div>
+          <div class="current-pokemon-stats-container column">
+            <div class="current-pokemon-stats-icon" style="background: #a8f08a">
+              SpD
+            </div>
+            <h5 id="current-pokemon-stats-special-defense"></h5>
+          </div>
+          <div class="current-pokemon-stats-container column">
+            <div class="current-pokemon-stats-icon" style="background: #fb94a8">
+              SPD
+            </div>
+            <h5 id="current-pokemon-stats-speed"></h5>
+          </div>
+          <div
+            class="current-pokemon-stats-container column"
+            style="background: #8fb1ff"
+          >
+            <div class="current-pokemon-stats-icon" style="background: #7395db">
+              TOT
+            </div>
+            <h5 id="current-pokemon-stats-total"></h5>
+          </div>
+        </div>
+
+        <!--Evolution Chain-->
+        <div id="current-pokemon-evolution-chain-container">
+          <h4>Evolution</h4>
+          <div class="row center"></div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
