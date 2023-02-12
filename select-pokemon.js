@@ -69,7 +69,15 @@ async function renderPokemonAbilities(abilitiesObj) {
 
 // background="${pokemonTypeInfo[weakness].icon}"
 async function renderPokemonWeaknesses(weaknesses) {
-  document.getElementById(`current-pokemon-weaknesses`).innerHTML = "";
+  document.getElementById(`current-pokemon-weaknesses`).innerHTML =
+    weaknesses.size < 6
+      ? `<div
+          class="current-pokemon-weakness-icon"
+          style="background: #8f9396">
+          2X
+        </div>`
+      : "";
+
   weaknesses.forEach((weakness) => {
     document.getElementById(`current-pokemon-weaknesses`).innerHTML += `<img
       class="current-pokemon-weakness-icon"

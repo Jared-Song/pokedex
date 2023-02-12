@@ -1,8 +1,11 @@
 let totalPokemon = 0;
-let pokemonIndex = 102;
+let pokemonIndex = 338;
 // empoleon = 395
-// exeggcute = 102 for type weakness testing
-// eevee = 133
+// exeggcute = 102 for type weakness testing (7)
+// solrock = 338 for type weakness testing (7) 
+// ^^ https://pokemon-archive.fandom.com/wiki/Move_Immunity_Abilities
+
+// eevee = 133 for item/evol testing
 
 let n = 5;
 let url = "https://pokeapi.co/api/v2/pokemon/";
