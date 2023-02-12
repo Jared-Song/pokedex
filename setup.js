@@ -1,5 +1,9 @@
 let totalPokemon = 0;
-let pokemonIndex = 395;
+let pokemonIndex = 102;
+// empoleon = 395
+// exeggcute = 102 for type weakness testing
+// eevee = 133
+
 let n = 5;
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
@@ -58,15 +62,15 @@ function setPokemonBorderMouseOver(types) {
   if (types.length == 1) {
     return (
       "this.style.border = '2px solid " +
-      pokemonTypeColours[types[0].type.name] +
+      pokemonTypeInfo[types[0].type.name].colour +
       "'"
     );
   }
   return (
     "this.style.borderImage = 'linear-gradient(90deg," +
-    pokemonTypeColours[types[0].type.name] +
+    pokemonTypeInfo[types[0].type.name].colour +
     "," +
-    pokemonTypeColours[types[1].type.name] +
+    pokemonTypeInfo[types[1].type.name].colour +
     ") 1'"
   );
 }
@@ -90,8 +94,8 @@ function renderPokemonTypes(types) {
   types.forEach(({ type: { name } }) => {
     html += `
       <div class="pokemon-type-container" 
-        style="background: ${pokemonTypeColours[name]}; 
-               border: 2px solid ${pokemonTypeColours[name + "-border"]};"
+        style="background: ${pokemonTypeInfo[name].colour}; 
+               border: 2px solid ${pokemonTypeInfo[name].border};"
       >
         <h3>${name.toUpperCase()}</h3>             
       </div>`;
@@ -100,41 +104,23 @@ function renderPokemonTypes(types) {
   return html + "</div>";
 }
 
-const pokemonTypeColours = {
-  normal: "#A8A878",
-  "normal-border": "#6D6D4E",
-  fire: "#F08030",
-  "fire-border": "#9C531F",
-  water: "#6890F0",
-  "water-border": "#445E9C",
-  electric: "#F8D030",
-  "electric-border": "#A1871F",
-  grass: "#78C850",
-  "grass-border": "#4E8234",
-  ice: "#98D8D8",
-  "ice-border": "#638D8D",
-  fighting: "#C03028",
-  "fighting-border": "#7D1F1A",
-  poison: "#A040A0",
-  "poison-border": "#682A68",
-  ground: "#E0C068",
-  "ground-border": "#927D44",
-  flying: "#A890F0",
-  "flying-border": "#6D5E9C",
-  psychic: "#F85888",
-  "psychic-border": "#A13959",
-  bug: "#A8B820",
-  "bug-border": "#6D7815",
-  rock: "#B8A038",
-  "rock-border": "#786824",
-  ghost: "#705898",
-  "ghost-border": "#493963",
-  dragon: "#7038F8",
-  "dragon-border": "#4924A1",
-  dark: "#705848",
-  "dark-border": "49392F",
-  steel: "#B8B8D0",
-  "steel-border": "#787887",
-  fairy: "#EE99AC",
-  "fairy-border": "#9B6470",
+const pokemonTypeInfo = {
+  normal: { colour: "#A8A878", border: "#6D6D4E", icon: "#A0A29F" },
+  fire: { colour: "#F08030", border: "#9C531F", icon: "#FBA54C" },
+  water: { colour: "#6890F0", border: "#445E9C", icon: "#539DDF" },
+  electric: { colour: "#F8D030", border: "#A1871F", icon: "#F2D94E" },
+  grass: { colour: "#78C850", border: "#4E8234", icon: "#5FBD58" },
+  ice: { colour: "#98D8D8", border: "#638D8D", icon: "#75D0C1" },
+  fighting: { colour: "#C03028", border: "#7D1F1A", icon: "#D3425F" },
+  poison: { colour: "#A040A0", border: "#682A68", icon: "#B763CF" },
+  ground: { colour: "#E0C068", border: "#927D44", icon: "#DA7C4D" },
+  flying: { colour: "#A890F0", border: "#6D5E9C", icon: "#A1BBEC" },
+  psychic: { colour: "#F85888", border: "#A13959", icon: "#FA8581" },
+  bug: { colour: "#A8B820", border: "#6D7815", icon: "#92BC2C" },
+  rock: { colour: "#B8A038", border: "#786824", icon: "#C9BB8A" },
+  ghost: { colour: "#705898", border: "#493963", icon: "#5F6DBC" },
+  dragon: { colour: "#7038F8", border: "#4924A1", icon: "#0C69C8" },
+  dark: { colour: "#705848", border: "#49392F", icon: "#595761" },
+  steel: { colour: "#B8B8D0", border: "#787887", icon: "#5695A3" },
+  fairy: { colour: "#EE99AC", border: "#9B6470", icon: "#EE90E6" },
 };

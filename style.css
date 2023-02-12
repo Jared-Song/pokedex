@@ -166,6 +166,32 @@ input {
   border-bottom-right-radius: 0;
 }
 
+.current-pokemon-weaknesses-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  background-color: #f6f8fc;
+  padding: 8px 0px;
+  border-radius: 30px;
+  margin: 5px;
+}
+
+.current-pokemon-weaknesses-container::-webkit-scrollbar {
+  display: none;
+}
+
+.current-pokemon-weakness-icon {
+  height: 8%;
+  width: 8%;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  font-size: 10px;
+  padding: 4px 4px;
+  margin: 0px 1px;
+}
+
 .current-pokemon-stats-container {
   display: flex;
   background: #f6f8fc;

@@ -43,7 +43,7 @@ function formatAbilityName(name) {
     .replace(/-/g, " ");
 }
 
-async function setPokemonAbilities(abilitiesObj) {
+async function renderPokemonAbilities(abilitiesObj) {
   const element = document.getElementById("current-pokemon-abilities");
   element.innerHTML = "";
 
@@ -67,7 +67,20 @@ async function setPokemonAbilities(abilitiesObj) {
   });
 }
 
-async function setPokemonStats(stats) {
+// background="${pokemonTypeInfo[weakness].icon}"
+async function renderPokemonWeaknesses(weaknesses) {
+  document.getElementById(`current-pokemon-weaknesses`).innerHTML = "";
+  weaknesses.forEach((weakness) => {
+    document.getElementById(`current-pokemon-weaknesses`).innerHTML += `<img
+      class="current-pokemon-weakness-icon"
+      src="resources/type-icons/${weakness}.svg"
+      style="background: ${pokemonTypeInfo[weakness].icon};"
+      title=${weakness.charAt(0).toUpperCase() + weakness.slice(1)}
+    />`;
+  });
+}
+
+async function renderPokemonStats(stats) {
   let statArr = {};
   let total = 0;
 
@@ -111,19 +124,6 @@ async function fetchPokemonInfo(id) {
 
   console.log("POKEMON INFO:");
   console.log(pokemon.sprites.other["official-artwork"].front_default);
-  console.log(
-    "ability:",
-    pokemon.abilities["0"].ability.name,
-    ",is_hidden?:",
-    pokemon.abilities["0"].is_hidden
-  );
-  console.log(
-    "ability:",
-    pokemon.abilities["1"].ability.name,
-    ",is_hidden?:",
-    pokemon.abilities["1"].is_hidden
-  );
-  console.log("weaknesses:", getTypeWeaknesses(pokemon.types));
   console.log("evolution chain: ", await getEvolutionChain(species));
   console.log("next/prev pokemons: ", await getNeighbourPokemons(id));
 
@@ -135,7 +135,7 @@ async function fetchPokemonInfo(id) {
     species.genera["7"].genus;
   document.getElementById("current-pokemon-types").innerHTML =
     await setPokemonTypes(pokemon.types);
-  setPokemonAbilities(pokemon.abilities);
+  renderPokemonAbilities(pokemon.abilities);
 
   document.getElementById("current-pokemon-flavour-text").innerHTML =
     species.flavor_text_entries["1"].flavor_text;
@@ -146,9 +146,11 @@ async function fetchPokemonInfo(id) {
   document.getElementById("current-pokemon-weight").innerHTML =
     pokemon.weight / 10 + "kg";
 
+  renderPokemonWeaknesses(getTypeWeaknesses(pokemon.types));
+
   document.getElementById("current-pokemon-base-exp").innerHTML =
     pokemon.base_experience;
-  setPokemonStats(pokemon.stats);
+  renderPokemonStats(pokemon.stats);
 }
 
 async function getEvolutionChain(species) {
