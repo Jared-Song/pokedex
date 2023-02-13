@@ -10,7 +10,6 @@ body {
   background: #f6f8fc;
   padding: 0 10vw;
   height: 100vh;
-  font-family: "Outfit", sans-serif;
 }
 
 h1,
@@ -164,6 +163,32 @@ input {
   text-align: center;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+#current-pokemon-sprite {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 77vh;
+  margin-right: auto;
+  margin-left: auto;
+  object-fit: contain;
+  max-width: 350px;
+  max-height: 22vh;
+}
+
+#current-pokemon-info {
+  margin-top: 6vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+}
+
+#current-pokemon-info::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
 }
 
 .current-pokemon-weaknesses-container {

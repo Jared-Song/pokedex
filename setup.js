@@ -1,5 +1,5 @@
 let totalPokemon = 0;
-let pokemonIndex = 338;
+let pokemonIndex = 395;
 // empoleon = 395
 // exeggcute = 102 for type weakness testing (7)
 // solrock = 338 for type weakness testing (7) 
@@ -11,8 +11,8 @@ let n = 5;
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
 async function setup() {
-  renderPokeballSearchIcon();
   setupTypesWeaknesses();
+  renderPokeballSearchIcon();
   let response = await fetch(url);
   let responseAsJson = await response.json();
   totalPokemon = responseAsJson.count;

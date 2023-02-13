@@ -11,9 +11,9 @@ function displayPokemonInfo(id) {
 async function setupTypesWeaknesses() {
   const urlAllTypes = "https://pokeapi.co/api/v2/type";
   const allTypesResponse = await fetch(urlAllTypes);
-  const allTypes = await allTypesResponse.json();
+  const allTypesObj = await allTypesResponse.json();
 
-  for (const type of allTypes.results) {
+  for (const type of allTypesObj.results) {
     await setupTypeWeaknesses(type);
   }
 }
@@ -67,7 +67,6 @@ async function renderPokemonAbilities(abilitiesObj) {
   });
 }
 
-// background="${pokemonTypeInfo[weakness].icon}"
 async function renderPokemonWeaknesses(weaknesses) {
   document.getElementById(`current-pokemon-weaknesses`).innerHTML =
     weaknesses.size < 6
@@ -88,7 +87,7 @@ async function renderPokemonWeaknesses(weaknesses) {
   });
 }
 
-async function renderPokemonStats(stats) {
+function renderPokemonStats(stats) {
   let statArr = {};
   let total = 0;
 
@@ -135,7 +134,9 @@ async function fetchPokemonInfo(id) {
   console.log("evolution chain: ", await getEvolutionChain(species));
   console.log("next/prev pokemons: ", await getNeighbourPokemons(id));
 
-  // setting elements
+  // rendering elements
+  document.getElementById("current-pokemon-sprite").src =
+    pokemon.sprites.other["official-artwork"].front_default;
   document.getElementById("current-pokemon-id").innerHTML = "#" + id;
   document.getElementById("current-pokemon-name").innerHTML =
     pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
@@ -146,7 +147,7 @@ async function fetchPokemonInfo(id) {
   renderPokemonAbilities(pokemon.abilities);
 
   document.getElementById("current-pokemon-flavour-text").innerHTML =
-    species.flavor_text_entries["1"].flavor_text;
+    cleanFlavourText(species.flavor_text_entries["1"].flavor_text);
 
   document.getElementById("current-pokemon-height").innerHTML =
     pokemon.height / 10 + "m";
@@ -159,6 +160,17 @@ async function fetchPokemonInfo(id) {
   document.getElementById("current-pokemon-base-exp").innerHTML =
     pokemon.base_experience;
   renderPokemonStats(pokemon.stats);
+}
+
+function cleanFlavourText(text) {
+  // https://github.com/andreferreiradlw/pokestats/issues/41
+  return text
+    .replace("\f", "\n")
+    .replace("\u00ad\n", "")
+    .replace("\u00ad", "")
+    .replace(" -\n", " - ")
+    .replace("-\n", "-")
+    .replace("\n", " ");
 }
 
 async function getEvolutionChain(species) {
