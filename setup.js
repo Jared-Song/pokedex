@@ -50,7 +50,7 @@ async function renderPokemon(id) {
     </div>
     <span class = "bold font-size-12">N°${id}</span>
     <h3>${capitalizeFirstLetter(pokemon.name)}</h3>
-    ${renderPokemonTypes(pokemon.types)}
+    ${renderPokedexPokemonTypes(pokemon.types)}
   </div>`;
 }
 
@@ -91,7 +91,7 @@ function renderPokeballSearchIcon() {
   />`;
 }
 
-function renderPokemonTypes(types) {
+function renderPokedexPokemonTypes(types) {
   let html = '<div class="row">';
 
   types.forEach(({ type: { name } }) => {

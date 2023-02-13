@@ -152,7 +152,7 @@ input {
 }
 
 /* Current Pokemon */
-#current-pokemon-container {
+#selected-pokemon-container {
   width: 320px;
   height: 82vh;
   position: fixed;
@@ -165,7 +165,7 @@ input {
   border-bottom-right-radius: 0;
 }
 
-#current-pokemon-sprite {
+#selected-pokemon-sprite {
   position: absolute;
   right: 0;
   left: 0;
@@ -177,7 +177,7 @@ input {
   max-height: 22vh;
 }
 
-#current-pokemon-info {
+#selected-pokemon-info {
   margin-top: 6vh;
   height: 100%;
   display: flex;
@@ -187,11 +187,11 @@ input {
   overflow-y: scroll;
 }
 
-#current-pokemon-info::-webkit-scrollbar {
+#selected-pokemon-info::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
 }
 
-.current-pokemon-weaknesses-container {
+.selected-pokemon-weaknesses-container {
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -202,11 +202,11 @@ input {
   margin: 5px;
 }
 
-.current-pokemon-weaknesses-container::-webkit-scrollbar {
+.selected-pokemon-weaknesses-container::-webkit-scrollbar {
   display: none;
 }
 
-.current-pokemon-weakness-icon {
+.selected-pokemon-weakness-icon {
   height: 8%;
   width: 8%;
   border-radius: 50%;
@@ -217,7 +217,7 @@ input {
   margin: 0px 1px;
 }
 
-.current-pokemon-stats-container {
+.selected-pokemon-stats-container {
   display: flex;
   background: #f6f8fc;
   padding: 5px;
@@ -225,11 +225,11 @@ input {
   margin: 5px;
 }
 
-.current-pokemon-stats-container h5 {
+.selected-pokemon-stats-container h5 {
   margin: 6px 0;
 }
 
-.current-pokemon-stats-icon {
+.selected-pokemon-stats-icon {
   display: flex;
   justify-content: center;
   align-items: center;

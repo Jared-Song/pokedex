@@ -3,7 +3,7 @@ const maxIndex = 1008; // miraidon
 const pokemonApi = "https://pokeapi.co/api/v2/pokemon/";
 
 function displayPokemonInfo(id) {
-  // document.getElementById('current-pokemon-unselected').classList.add('hide');
+  // document.getElementById('selected-pokemon-unselected').classList.add('hide');
   fetchPokemonInfo(id);
   // renderPokemonInfo(id);
 }
@@ -29,9 +29,8 @@ async function setupTypeWeaknesses(typeObj) {
   allTypes[typeObj.name] = [doubleDamageFrom, halfDamageFrom];
 }
 
-async function setPokemonTypes(typesObj) {
-  const types = typesObj.map((typeObj) => typeObj.type.name);
-  return types;
+function setPokemonTypes(typesObj) {
+  return typesObj.map((typeObj) => typeObj.type.name);
 }
 
 function formatAbilityName(name) {
@@ -43,8 +42,24 @@ function formatAbilityName(name) {
     .replace(/-/g, " ");
 }
 
+function renderPokemonTypes(types) {
+  const typesArr = types.map((type) => type.type.name);
+  let typeHtml = `<div class="row center">`;
+  typesArr.forEach((type) => {
+    typeHtml += `<div class="pokemon-type-container" 
+                  style="background: ${pokemonTypeInfo[type].colour}; 
+                  border: 2px solid ${pokemonTypeInfo[type].border};">
+                    <h3>${type.toUpperCase()}</h3>             
+                  </div>
+                `;
+  });
+
+  document.getElementById("selected-pokemon-types").innerHTML =
+    typeHtml += `</div>`;
+}
+
 async function renderPokemonAbilities(abilitiesObj) {
-  const element = document.getElementById("current-pokemon-abilities");
+  const element = document.getElementById("selected-pokemon-abilities");
   element.innerHTML = "";
 
   abilitiesObj.forEach((abilityObj) => {
@@ -68,18 +83,18 @@ async function renderPokemonAbilities(abilitiesObj) {
 }
 
 async function renderPokemonWeaknesses(weaknesses) {
-  document.getElementById(`current-pokemon-weaknesses`).innerHTML =
+  document.getElementById(`selected-pokemon-weaknesses`).innerHTML =
     weaknesses.size < 6
       ? `<div
-          class="current-pokemon-weakness-icon"
+          class="selected-pokemon-weakness-icon"
           style="background: #8f9396">
           2X
         </div>`
       : "";
 
   weaknesses.forEach((weakness) => {
-    document.getElementById(`current-pokemon-weaknesses`).innerHTML += `<img
-      class="current-pokemon-weakness-icon"
+    document.getElementById(`selected-pokemon-weaknesses`).innerHTML += `<img
+      class="selected-pokemon-weakness-icon"
       src="resources/type-icons/${weakness}.svg"
       style="background: ${pokemonTypeInfo[weakness].icon};"
       title=${weakness.charAt(0).toUpperCase() + weakness.slice(1)}
@@ -108,7 +123,7 @@ function renderPokemonStats(stats) {
     "total",
   ];
   statIds.forEach((statId) => {
-    document.getElementById(`current-pokemon-stats-${statId}`).innerHTML =
+    document.getElementById(`selected-pokemon-stats-${statId}`).innerHTML =
       statArr[statId];
   });
 }
@@ -135,29 +150,29 @@ async function fetchPokemonInfo(id) {
   console.log("next/prev pokemons: ", await getNeighbourPokemons(id));
 
   // rendering elements
-  document.getElementById("current-pokemon-sprite").src =
+  document.getElementById("selected-pokemon-sprite").src =
     pokemon.sprites.other["official-artwork"].front_default;
-  document.getElementById("current-pokemon-id").innerHTML = "#" + id;
-  document.getElementById("current-pokemon-name").innerHTML =
+  document.getElementById("selected-pokemon-id").innerHTML = "#" + id;
+  document.getElementById("selected-pokemon-name").innerHTML =
     pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
-  document.getElementById("current-pokemon-title").innerHTML =
+  document.getElementById("selected-pokemon-title").innerHTML =
     species.genera["7"].genus;
-  document.getElementById("current-pokemon-types").innerHTML =
-    await setPokemonTypes(pokemon.types);
+
+  renderPokemonTypes(pokemon.types);
   renderPokemonAbilities(pokemon.abilities);
 
-  document.getElementById("current-pokemon-flavour-text").innerHTML =
+  document.getElementById("selected-pokemon-flavour-text").innerHTML =
     cleanFlavourText(species.flavor_text_entries["1"].flavor_text);
 
-  document.getElementById("current-pokemon-height").innerHTML =
+  document.getElementById("selected-pokemon-height").innerHTML =
     pokemon.height / 10 + "m";
 
-  document.getElementById("current-pokemon-weight").innerHTML =
+  document.getElementById("selected-pokemon-weight").innerHTML =
     pokemon.weight / 10 + "kg";
 
   renderPokemonWeaknesses(getTypeWeaknesses(pokemon.types));
 
-  document.getElementById("current-pokemon-base-exp").innerHTML =
+  document.getElementById("selected-pokemon-base-exp").innerHTML =
     pokemon.base_experience;
   renderPokemonStats(pokemon.stats);
 }
