@@ -139,6 +139,24 @@
           <h4>Evolution</h4>
           <div class="row center"></div>
         </div>
+
+        <!--Prev/Next Pokemon-->
+        <div id="selected-pokemon-neighbours" >
+          <div id="button-wrapper" class="button-wrapper row center margin-5">
+            <button id="left-button" class="left-button" onclick="console.log('Open left')">
+              <i class='fas fa-angle-left'></i>
+              <img id="left-neighbour-sprite" class="neighbour-sprite align-middle"></img>
+              <b id="left-neighbour-name">Prinplup</b>
+              <span id="left-neighbour-id">#394</span>
+            </button>
+            <button id="right-button" class="right-button" onclick="console.log('Open right')">
+              <span id="right-neighbour-id">#396</span>
+              <b id="right-neighbour-name">Fletchinder</b>
+              <img id="right-neighbour-sprite" class="neighbour-sprite align-middle"></img>
+              <i class='fas fa-angle-right'></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </body>

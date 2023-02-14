@@ -1,5 +1,5 @@
 let totalPokemon = 0;
-let pokemonIndex = 395;
+let pokemonIndex = 10006;
 // empoleon = 395
 // exeggcute = 102 for type weakness testing (7)
 // solrock = 338 for type weakness testing (7) 
@@ -7,6 +7,12 @@ let pokemonIndex = 395;
 
 // eevee = 133 for item/evol testing
 
+// shaymin, deoxys, keldeo, rotom, giratina (487), wormadom for unique names/forms 
+// -- checkout species.varieties giratina origin form is id 10007
+
+// gallade pokedex entry language
+
+// heatran sprite
 let n = 5;
 let url = "https://pokeapi.co/api/v2/pokemon/";
 

@@ -64,6 +64,60 @@ span {
   margin: 5px;
 }
 
+.align-middle {
+  vertical-align: middle;
+}
+
+.neighbour-sprite {
+  height: 25px;
+  width: 25px;
+}
+
+.neighbour-sprite:after {
+  transform: translate(-50%, -50%);
+}
+
+.button-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.button-wrapper:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: calc(100% - 30px);
+  width: 1.5px;
+  background-color: #a7a9ac;
+}
+
+.button-wrapper b {
+  font-size: 11px;
+}
+
+.button-wrapper span {
+  font-size: 11px;
+}
+
+.left-button {
+  border-radius: 40px 0 0 40px;
+  padding: 16px 6px 16px 16px;
+  width: 50%;
+  border: none;
+  text-align: left;
+}
+
+.right-button {
+  border-radius: 0 40px 40px 0;
+  padding: 16px 16px 16px 6px;
+  width: 50%;
+  border: none;
+  text-align: right;
+}
+
 input {
   border: none;
   font-size: 18px;

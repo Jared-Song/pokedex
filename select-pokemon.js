@@ -97,7 +97,7 @@ async function renderPokemonWeaknesses(weaknesses) {
       class="selected-pokemon-weakness-icon"
       src="resources/type-icons/${weakness}.svg"
       style="background: ${pokemonTypeInfo[weakness].icon};"
-      title=${weakness.charAt(0).toUpperCase() + weakness.slice(1)}
+      title=${titleCase(weakness)}
     />`;
   });
 }
@@ -128,6 +128,46 @@ function renderPokemonStats(stats) {
   });
 }
 
+async function renderPokemonNeighbours(id) {
+  const leftId = (id + maxIndex - 1) % maxIndex || maxIndex;
+  const rightId = (id + 1) % maxIndex;
+
+  const leftPokemonResponse = await fetch(pokemonApi + leftId);
+  const leftPokemon = await leftPokemonResponse.json();
+  const rightPokemonResponse = await fetch(pokemonApi + rightId);
+  const rightPokemon = await rightPokemonResponse.json();
+
+  const leftButton = document.getElementById("left-button");
+  leftButton.setAttribute(
+    "onClick",
+    "javascript: " + "fetchPokemonInfo(" + leftId + ")"
+  );
+  document.getElementById("left-neighbour-name").innerHTML = titleCase(
+    leftPokemon.name
+  );
+  document.getElementById("left-neighbour-id").innerHTML = "#" + leftId;
+  document.getElementById("left-neighbour-sprite").src =
+    leftPokemon.sprites.versions["generation-v"][
+      "black-white"
+    ].animated.front_default;
+
+  const rightButton = document.getElementById("right-button");
+  rightButton.setAttribute(
+    "onClick",
+    "javascript: " + "fetchPokemonInfo(" + rightId + ")"
+  );
+  document.getElementById("right-neighbour-name").innerHTML = titleCase(
+    rightPokemon.name
+  );
+  document.getElementById("right-neighbour-id").innerHTML = "#" + rightId;
+  document.getElementById("right-neighbour-sprite").src =
+    rightPokemon.sprites.versions["generation-v"][
+      "black-white"
+    ].animated.front_default;
+}
+
+function fetchNeighbour(pokemon) {}
+
 async function fetchPokemonInfo(id) {
   const urlPokemon = pokemonApi + id;
   const urlPokemonSpecies = "https://pokeapi.co/api/v2/pokemon-species/" + id;
@@ -136,25 +176,21 @@ async function fetchPokemonInfo(id) {
   const pokemon = await pokemonResponse.json();
   const species = await pokemonSpeciesResponse.json();
 
-  const pokemonName =
-    pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-
+  const pokemonName = titleCase(pokemon.name);
   console.log("pokemon");
   console.log(pokemon);
   console.log("species:");
   console.log(species);
 
   console.log("POKEMON INFO:");
-  console.log(pokemon.sprites.other["official-artwork"].front_default);
   console.log("evolution chain: ", await getEvolutionChain(species));
-  console.log("next/prev pokemons: ", await getNeighbourPokemons(id));
 
   // rendering elements
   document.getElementById("selected-pokemon-sprite").src =
     pokemon.sprites.other["official-artwork"].front_default;
   document.getElementById("selected-pokemon-id").innerHTML = "#" + id;
   document.getElementById("selected-pokemon-name").innerHTML =
-    pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
+    titleCase(pokemonName);
   document.getElementById("selected-pokemon-title").innerHTML =
     species.genera["7"].genus;
 
@@ -175,6 +211,7 @@ async function fetchPokemonInfo(id) {
   document.getElementById("selected-pokemon-base-exp").innerHTML =
     pokemon.base_experience;
   renderPokemonStats(pokemon.stats);
+  renderPokemonNeighbours(id);
 }
 
 function cleanFlavourText(text) {
@@ -204,28 +241,6 @@ async function getEvolutionChain(species) {
   return evolutionArr;
 }
 
-async function getNeighbourPokemons(id) {
-  const neighbourIds = [
-    (id + maxIndex - 1) % maxIndex || maxIndex, // left id
-    (id + 1) % maxIndex, // right id
-  ];
-
-  const neighbours = await Promise.all(
-    neighbourIds.map(async (neighbourId) => {
-      const neighbourResponse = await fetch(pokemonApi + neighbourId);
-      const neighbourPokemon = await neighbourResponse.json();
-      return [
-        neighbourId,
-        neighbourPokemon.name,
-        neighbourPokemon.sprites.versions["generation-v"]["black-white"]
-          .animated.front_default,
-      ];
-    })
-  );
-
-  return neighbours;
-}
-
 function getTypeWeaknesses(types) {
   const dbl_damage_from = new Set();
   const half_damage_from = new Set();
@@ -242,4 +257,8 @@ function getTypeWeaknesses(types) {
   }
 
   return dbl_damage_from;
+}
+
+function titleCase(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
