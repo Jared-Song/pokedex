@@ -1,19 +1,21 @@
 let totalPokemon = 0;
-let pokemonIndex = 10006;
+let pokemonIndex = 10001;
 // empoleon = 395
 // exeggcute = 102 for type weakness testing (7)
 // solrock = 338 for type weakness testing (7) 
 // ^^ https://pokemon-archive.fandom.com/wiki/Move_Immunity_Abilities
 
 // eevee = 133 for item/evol testing
+// gallade pokedex entry language is korean for some reason
+// heatran sprite looks off
 
 // shaymin, deoxys, keldeo, rotom, giratina (487), wormadom for unique names/forms 
-// -- checkout species.varieties giratina origin form is id 10007
-
-// gallade pokedex entry language
-
-// heatran sprite
-let n = 5;
+// -- checkout species.varieties --> special forms start at pokemonId 10001
+// pikachu sinnh cap id 10096
+// different forms/varieties of pokemon
+// https://github.com/PokeAPI/pokeapi/issues/401
+// https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_with_form_differences
+let n = 100;
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
 async function setup() {
@@ -51,7 +53,7 @@ async function renderPokemon(id) {
       <img class = "pokedex-sprite" src = "${
         pokemon.sprites.versions["generation-v"]["black-white"].animated[
           "front_default"
-        ]
+        ] // needs to be changed when special forms are considered
       }">
     </div>
     <span class = "bold font-size-12">N°${id}</span>

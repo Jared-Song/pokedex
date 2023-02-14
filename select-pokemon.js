@@ -170,10 +170,11 @@ function fetchNeighbour(pokemon) {}
 
 async function fetchPokemonInfo(id) {
   const urlPokemon = pokemonApi + id;
-  const urlPokemonSpecies = "https://pokeapi.co/api/v2/pokemon-species/" + id;
   const pokemonResponse = await fetch(urlPokemon);
-  const pokemonSpeciesResponse = await fetch(urlPokemonSpecies);
   const pokemon = await pokemonResponse.json();
+
+  const urlPokemonSpecies = pokemon.species.url;
+  const pokemonSpeciesResponse = await fetch(urlPokemonSpecies);
   const species = await pokemonSpeciesResponse.json();
 
   const pokemonName = titleCase(pokemon.name);
