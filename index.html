@@ -27,7 +27,7 @@
     <div id="selected-pokemon-container" class="container column">
       <div id="selected-pokemon-info">
         <!--Sprite-->
-        <img id="selected-pokemon-sprite" ></img>
+        <img id="selected-pokemon-sprite" />
 
         <!--Id, Name, Title-->
         <span id="selected-pokemon-id"></span>
@@ -88,37 +88,55 @@
         <h4>Stats</h4>
         <div class="row center">
           <div class="selected-pokemon-stats-container column">
-            <div class="selected-pokemon-stats-icon" style="background: #df2140">
+            <div
+              class="selected-pokemon-stats-icon"
+              style="background: #df2140"
+            >
               HP
             </div>
             <h5 id="selected-pokemon-stats-hp"></h5>
           </div>
           <div class="selected-pokemon-stats-container column">
-            <div class="selected-pokemon-stats-icon" style="background: #ff994d">
+            <div
+              class="selected-pokemon-stats-icon"
+              style="background: #ff994d"
+            >
               ATK
             </div>
             <h5 id="selected-pokemon-stats-attack"></h5>
           </div>
           <div class="selected-pokemon-stats-container column">
-            <div class="selected-pokemon-stats-icon" style="background: #fedc52">
+            <div
+              class="selected-pokemon-stats-icon"
+              style="background: #fedc52"
+            >
               DEF
             </div>
             <h5 id="selected-pokemon-stats-defense"></h5>
           </div>
           <div class="selected-pokemon-stats-container column">
-            <div class="selected-pokemon-stats-icon" style="background: #85ddff">
+            <div
+              class="selected-pokemon-stats-icon"
+              style="background: #85ddff"
+            >
               SpA
             </div>
             <h5 id="selected-pokemon-stats-special-attack"></h5>
           </div>
           <div class="selected-pokemon-stats-container column">
-            <div class="selected-pokemon-stats-icon" style="background: #a8f08a">
+            <div
+              class="selected-pokemon-stats-icon"
+              style="background: #a8f08a"
+            >
               SpD
             </div>
             <h5 id="selected-pokemon-stats-special-defense"></h5>
           </div>
           <div class="selected-pokemon-stats-container column">
-            <div class="selected-pokemon-stats-icon" style="background: #fb94a8">
+            <div
+              class="selected-pokemon-stats-icon"
+              style="background: #fb94a8"
+            >
               SPD
             </div>
             <h5 id="selected-pokemon-stats-speed"></h5>
@@ -127,7 +145,10 @@
             class="selected-pokemon-stats-container column"
             style="background: #8fb1ff"
           >
-            <div class="selected-pokemon-stats-icon" style="background: #7395db">
+            <div
+              class="selected-pokemon-stats-icon"
+              style="background: #7395db"
+            >
               TOT
             </div>
             <h5 id="selected-pokemon-stats-total"></h5>
@@ -135,25 +156,40 @@
         </div>
 
         <!--Evolution Chain-->
-        <div id="selected-pokemon-evolution-chain-container">
-          <h4>Evolution</h4>
-          <div class="row center"></div>
-        </div>
+        <h4>Evolution</h4>
+        <div
+          id="selected-pokemon-evolution-chain"
+          class="row center"
+        ></div>
 
         <!--Prev/Next Pokemon-->
-        <div id="selected-pokemon-neighbours" >
+        <div id="selected-pokemon-neighbours">
           <div id="button-wrapper" class="button-wrapper row center margin-5">
-            <button id="left-button" class="left-button" onclick="console.log('Open left')">
-              <i class='fas fa-angle-left'></i>
-              <img id="left-neighbour-sprite" class="neighbour-sprite align-middle"></img>
+            <button
+              id="left-button"
+              class="left-button"
+              onclick="console.log('Open left')"
+            >
+              <i class="fas fa-angle-left"></i>
+              <img
+                id="left-neighbour-sprite"
+                class="neighbour-sprite align-middle"
+              />
               <b id="left-neighbour-name">Prinplup</b>
               <span id="left-neighbour-id">#394</span>
             </button>
-            <button id="right-button" class="right-button" onclick="console.log('Open right')">
+            <button
+              id="right-button"
+              class="right-button"
+              onclick="console.log('Open right')"
+            >
               <span id="right-neighbour-id">#396</span>
               <b id="right-neighbour-name">Fletchinder</b>
-              <img id="right-neighbour-sprite" class="neighbour-sprite align-middle"></img>
-              <i class='fas fa-angle-right'></i>
+              <img
+                id="right-neighbour-sprite"
+                class="neighbour-sprite align-middle"
+              />
+              <i class="fas fa-angle-right"></i>
             </button>
           </div>
         </div>

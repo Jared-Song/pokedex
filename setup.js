@@ -1,5 +1,5 @@
 let totalPokemon = 0;
-let pokemonIndex = 10001;
+let pokemonIndex = 395;
 // empoleon = 395
 // exeggcute = 102 for type weakness testing (7)
 // solrock = 338 for type weakness testing (7) 

@@ -1,5 +1,5 @@
 let allTypes = {};
-const maxIndex = 1008; // miraidon
+const maxIndex = 1008; // gen 9 goes up to miraidon - 1008 but spirtes not supported by pokeAPI yet
 const pokemonApi = "https://pokeapi.co/api/v2/pokemon/";
 
 function displayPokemonInfo(id) {
@@ -58,7 +58,7 @@ function renderPokemonTypes(types) {
     typeHtml += `</div>`;
 }
 
-async function renderPokemonAbilities(abilitiesObj) {
+async function renderAbilities(abilitiesObj) {
   const element = document.getElementById("selected-pokemon-abilities");
   element.innerHTML = "";
 
@@ -82,7 +82,7 @@ async function renderPokemonAbilities(abilitiesObj) {
   });
 }
 
-async function renderPokemonWeaknesses(weaknesses) {
+async function renderWeaknesses(weaknesses) {
   document.getElementById(`selected-pokemon-weaknesses`).innerHTML =
     weaknesses.size < 6
       ? `<div
@@ -102,7 +102,7 @@ async function renderPokemonWeaknesses(weaknesses) {
   });
 }
 
-function renderPokemonStats(stats) {
+function renderStats(stats) {
   let statArr = {};
   let total = 0;
 
@@ -128,7 +128,7 @@ function renderPokemonStats(stats) {
   });
 }
 
-async function renderPokemonNeighbours(id) {
+async function renderNeighbours(id) {
   const leftId = (id + maxIndex - 1) % maxIndex || maxIndex;
   const rightId = (id + 1) % maxIndex;
 
@@ -136,7 +136,7 @@ async function renderPokemonNeighbours(id) {
   const leftPokemon = await leftPokemonResponse.json();
   const rightPokemonResponse = await fetch(pokemonApi + rightId);
   const rightPokemon = await rightPokemonResponse.json();
-
+  // console.log(leftPokemon);
   const leftButton = document.getElementById("left-button");
   leftButton.setAttribute(
     "onClick",
@@ -178,13 +178,13 @@ async function fetchPokemonInfo(id) {
   const species = await pokemonSpeciesResponse.json();
 
   const pokemonName = titleCase(pokemon.name);
-  console.log("pokemon");
-  console.log(pokemon);
-  console.log("species:");
-  console.log(species);
+  // console.log("pokemon");
+  // console.log(pokemon);
+  // console.log("species:");
+  // console.log(species);
 
-  console.log("POKEMON INFO:");
-  console.log("evolution chain: ", await getEvolutionChain(species));
+  // console.log("POKEMON INFO:");
+  // console.log("evolution chain: ", await getEvolutionChain(species));
 
   // rendering elements
   document.getElementById("selected-pokemon-sprite").src =
@@ -196,7 +196,7 @@ async function fetchPokemonInfo(id) {
     species.genera["7"].genus;
 
   renderPokemonTypes(pokemon.types);
-  renderPokemonAbilities(pokemon.abilities);
+  renderAbilities(pokemon.abilities);
 
   document.getElementById("selected-pokemon-flavour-text").innerHTML =
     cleanFlavourText(species.flavor_text_entries["1"].flavor_text);
@@ -207,12 +207,13 @@ async function fetchPokemonInfo(id) {
   document.getElementById("selected-pokemon-weight").innerHTML =
     pokemon.weight / 10 + "kg";
 
-  renderPokemonWeaknesses(getTypeWeaknesses(pokemon.types));
+  renderWeaknesses(getTypeWeaknesses(pokemon.types));
 
   document.getElementById("selected-pokemon-base-exp").innerHTML =
     pokemon.base_experience;
-  renderPokemonStats(pokemon.stats);
-  renderPokemonNeighbours(id);
+  renderStats(pokemon.stats);
+  renderEvolutionChain(species);
+  renderNeighbours(id);
 }
 
 function cleanFlavourText(text) {
@@ -226,6 +227,25 @@ function cleanFlavourText(text) {
     .replace("\n", " ");
 }
 
+async function renderEvolutionChain(species) {
+  let chainHtml = "";
+  const evolutionArr = await getEvolutionChain(species);
+  console.log(evolutionArr);
+  for (const evolution of evolutionArr) {
+    const evolDetails = evolution[1];
+    chainHtml += `<img class="selected-pokemon-evolution-sprite"
+      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution[0]}.png">
+      </div>`;
+    if (evolDetails[0] === "level-up") {
+      chainHtml += `<div class="selected-pokemon-evolution-level-container bold">${
+        "Lv. " + evolDetails[1]
+      } </div>`;
+    }
+  }
+  document.getElementById(`selected-pokemon-evolution-chain`).innerHTML =
+    chainHtml;
+}
+
 async function getEvolutionChain(species) {
   const urlEvolutionChain = species.evolution_chain.url;
   const evolutionChainResponse = await fetch(urlEvolutionChain);
@@ -235,7 +255,24 @@ async function getEvolutionChain(species) {
   let chain = evolutionChain.chain;
 
   while (chain) {
-    evolutionArr.push(chain.species.name);
+    console.log(chain);
+    let evolution_details = chain?.evolves_to[0]?.evolution_details[0];
+    let evolution_info = [];
+
+    if (evolution_details?.trigger?.name !== undefined) {
+      evolution_info.push(evolution_details.trigger.name);
+      if (evolution_details.trigger.name === "level-up") {
+        evolution_info.push(evolution_details.min_level);
+      } else if (evolution_details.trigger.name === "use-item") {
+        evolution_info.push(evolution_details.item.name);
+      }
+    }
+    evolutionArr.push([
+      chain.species.url
+        .replace("https://pokeapi.co/api/v2/pokemon-species/", "")
+        .replace("/", ""),
+      evolution_info,
+    ]);
     chain = chain.evolves_to[0];
   }
 
