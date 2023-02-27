@@ -3,9 +3,15 @@ const maxIndex = 1008; // gen 9 goes up to miraidon - 1008 but spirtes not suppo
 const pokemonApi = "https://pokeapi.co/api/v2/pokemon/";
 
 function displayPokemonInfo(id) {
-  // document.getElementById('selected-pokemon-unselected').classList.add('hide');
-  fetchPokemonInfo(id);
-  // renderPokemonInfo(id);
+  if (window.innerWidth > 1100) {
+    slideOutSelectedPokemon();
+
+    setTimeout(function () {
+      fetchPokemonInfo(id);
+    }, 350);
+  } else {
+    fetchPokemonInfo(id);
+  }
 }
 
 async function setupTypesWeaknesses() {
@@ -166,8 +172,6 @@ async function renderNeighbours(id) {
     ].animated.front_default;
 }
 
-function fetchNeighbour(pokemon) {}
-
 async function fetchPokemonInfo(id) {
   const urlPokemon = pokemonApi + id;
   const pokemonResponse = await fetch(urlPokemon);
@@ -178,14 +182,7 @@ async function fetchPokemonInfo(id) {
   const species = await pokemonSpeciesResponse.json();
 
   const pokemonName = titleCase(pokemon.name);
-  // console.log("pokemon");
-  // console.log(pokemon);
-  // console.log("species:");
-  // console.log(species);
-
-  // console.log("POKEMON INFO:");
-  // console.log("evolution chain: ", await getEvolutionChain(species));
-
+  document.getElementById("selected-pokemon-info").classList.remove("hide");
   // rendering elements
   document.getElementById("selected-pokemon-sprite").src =
     pokemon.sprites.other["official-artwork"].front_default;
@@ -214,6 +211,11 @@ async function fetchPokemonInfo(id) {
   renderStats(pokemon.stats);
   renderEvolutionChain(species);
   renderNeighbours(id);
+  setupResponsiveBackground(pokemon);
+  slideInSelectedPokemon();
+  if (window.innerWidth < 1100) {
+    openPokemonResponsiveInfo();
+  }
 }
 
 function cleanFlavourText(text) {
@@ -230,7 +232,7 @@ function cleanFlavourText(text) {
 async function renderEvolutionChain(species) {
   let chainHtml = "";
   const evolutionArr = await getEvolutionChain(species);
-  console.log(evolutionArr);
+  // console.log(evolutionArr);
   for (const evolution of evolutionArr) {
     const evolDetails = evolution[1];
     chainHtml += `<img class="selected-pokemon-evolution-sprite"
@@ -255,7 +257,7 @@ async function getEvolutionChain(species) {
   let chain = evolutionChain.chain;
 
   while (chain) {
-    console.log(chain);
+    // console.log(chain);
     let evolution_details = chain?.evolves_to[0]?.evolution_details[0];
     let evolution_info = [];
 
@@ -300,3 +302,97 @@ function getTypeWeaknesses(types) {
 function titleCase(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+function slideInSelectedPokemon() {
+  document.getElementById("selected-pokemon-placeholder").classList.add("hide");
+  document
+    .getElementById("selected-pokemon-container")
+    .classList.add("slide-in");
+  document
+    .getElementById("selected-pokemon-container")
+    .classList.remove("slide-out");
+}
+
+function slideOutSelectedPokemon() {
+  document
+    .getElementById("selected-pokemon-container")
+    .classList.remove("slide-in");
+
+  document
+    .getElementById("selected-pokemon-container")
+    .classList.add("slide-out");
+}
+
+function setupResponsiveBackground(pokemon) {
+  document.getElementById(
+    "selected-pokemon-responsive-background"
+  ).style.background = pokemonTypeInfo[pokemon.types[0].type.name].colour;
+}
+
+function openPokemonResponsiveInfo() {
+  document
+    .getElementById("selected-pokemon-container")
+    .classList.remove("hide");
+  document.getElementById("selected-pokemon-container").style.display = "flex";
+  document
+    .getElementById("selected-pokemon-responsive-close")
+    .classList.remove("hide");
+
+  document
+    .getElementById("selected-pokemon-responsive-background")
+    .classList.remove("hide");
+
+  document.getElementById(
+    "selected-pokemon-responsive-background"
+  ).style.opacity = 0;
+  setTimeout(function () {
+    document.getElementById(
+      "selected-pokemon-responsive-background"
+    ).style.opacity = 1;
+  }, 20);
+
+  document.getElementsByTagName("html")[0].style.overflow = "hidden";
+}
+
+function closePokemonInfo() {
+  setTimeout(function () {
+    document.getElementById("selected-pokemon-container").classList.add("hide");
+    document
+      .getElementById("selected-pokemon-responsive-close")
+      .classList.add("hide");
+
+    document
+      .getElementById("selected-pokemon-responsive-background")
+      .classList.add("hide");
+  }, 350);
+
+  document.getElementById(
+    "selected-pokemon-responsive-background"
+  ).style.opacity = 1;
+  setTimeout(function () {
+    document.getElementById(
+      "selected-pokemon-responsive-background"
+    ).style.opacity = 0;
+  }, 10);
+
+  document.getElementsByTagName("html")[0].style.overflow = "unset";
+
+  slideOutSelectedPokemon();
+}
+
+/**make selected pokemon container visible after resizing to < 1100px width && show scrollbar*/
+window.addEventListener("resize", function () {
+  if (
+    document
+      .getElementById("selected-pokemon-container")
+      .classList.contains("slide-out")
+  ) {
+    document
+      .getElementById("selected-pokemon-container")
+      .classList.replace("slide-out", "slide-in");
+  }
+
+  if (window.innerWidth > 1100) {
+    document.getElementsByTagName("html")[0].style.overflow = "unset";
+  }
+});

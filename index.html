@@ -15,6 +15,10 @@
   </head>
 
   <body onload="setup()" class="row">
+    <div id="loading-div">
+      <img src="resources/pokeball-icon.png" class="loading-ball" />
+    </div>
+
     <div id="pokedex-list" class="column">
       <div id="search-bar-container" class="row container margin-40">
         <input id="search-input" placeholder="Search your Pokémon!" />
@@ -24,8 +28,18 @@
       <div id="pokedex-list-render-container"></div>
     </div>
 
-    <div id="selected-pokemon-container" class="container column">
-      <div id="selected-pokemon-info">
+    <!--responsive selected pokemon-->
+    <div id="selected-pokemon-responsive-background" class="hide"></div>
+    <div
+      id="selected-pokemon-responsive-close"
+      class="hide"
+      onclick="closePokemonInfo()"
+    >
+      <i class="far fa-window-close"></i>
+    </div>
+
+    <div id="selected-pokemon-container" class="container column center">
+      <div id="selected-pokemon-info" class="hide">
         <!--Sprite-->
         <img id="selected-pokemon-sprite" />
 
@@ -157,10 +171,7 @@
 
         <!--Evolution Chain-->
         <h4>Evolution</h4>
-        <div
-          id="selected-pokemon-evolution-chain"
-          class="row center"
-        ></div>
+        <div id="selected-pokemon-evolution-chain" class="row center"></div>
 
         <!--Prev/Next Pokemon-->
         <div id="selected-pokemon-neighbours">
@@ -194,6 +205,16 @@
           </div>
         </div>
       </div>
+
+      <div id="selected-pokemon-placeholder">
+        <span class="font-size-18">Select a Pokémon<br />to display here</span>
+      </div>
     </div>
+
+    <img
+      id="loading-pokemon"
+      src="resources/pokeball-icon.png"
+      class="loading-ball"
+    />
   </body>
 </html>

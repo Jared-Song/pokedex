@@ -1,15 +1,15 @@
 let totalPokemon = 0;
-let pokemonIndex = 395;
-// empoleon = 395
-// exeggcute = 102 for type weakness testing (7)
-// solrock = 338 for type weakness testing (7) 
+let pokemonIndex = 1;
+// empoleon=395
+// exeggcute=102 for type weakness testing (7)
+// solrock=338 for type weakness testing (7)
 // ^^ https://pokemon-archive.fandom.com/wiki/Move_Immunity_Abilities
 
-// eevee = 133 for item/evol testing
+// eevee=133 for item/evol testing
 // gallade pokedex entry language is korean for some reason
 // heatran sprite looks off
 
-// shaymin, deoxys, keldeo, rotom, giratina (487), wormadom for unique names/forms 
+// shaymin, deoxys, keldeo, rotom, giratina (487), wormadom for unique names/forms
 // -- checkout species.varieties --> special forms start at pokemonId 10001
 // pikachu sinnh cap id 10096
 // different forms/varieties of pokemon
@@ -21,11 +21,11 @@ let url = "https://pokeapi.co/api/v2/pokemon/";
 async function setup() {
   setupTypesWeaknesses();
   renderPokeballSearchIcon();
-  let response = await fetch(url);
-  let responseAsJson = await response.json();
-  totalPokemon = responseAsJson.count;
+  // let response = await fetch(url);
+  // let responseAsJson = await response.json();
+  // totalPokemon = responseAsJson.count;
 
-  // for (let i = 1; i <= 10 + n; i++) {
+  // for (let i=1; i <=10 + n; i++) {
   //   renderPokemon(i);
   // }
 
@@ -33,6 +33,8 @@ async function setup() {
     // pokemon id starts at 1
     renderPokemon(i);
   }
+
+  loadingCompletion();
 }
 
 async function renderPokemon(id) {
@@ -45,18 +47,18 @@ async function renderPokemon(id) {
     "pokedex-list-render-container"
   );
 
-  renderContainer.innerHTML += `<div onclick = "displayPokemonInfo(${id})" class = "pokemon-render-result-container container center column"
-      onMouseOver = "${setPokemonBorderMouseOver(pokemon.types)}"
-      onMouseOut = "${setPokemonBorderMouseOut(pokemon.types.length)}"
+  renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${id})" class="pokemon-render-result-container container center column"
+      onMouseOver="${setPokemonBorderMouseOver(pokemon.types)}"
+      onMouseOut="${setPokemonBorderMouseOut(pokemon.types.length)}"
     >
-    <div class = "pokedex-sprite-container">
-      <img class = "pokedex-sprite" src = "${
+    <div class="pokedex-sprite-container">
+      <img class="pokedex-sprite" src="${
         pokemon.sprites.versions["generation-v"]["black-white"].animated[
           "front_default"
         ] // needs to be changed when special forms are considered
       }">
     </div>
-    <span class = "bold font-size-12">N°${id}</span>
+    <span class="bold font-size-12">N°${id}</span>
     <h3>${capitalizeFirstLetter(pokemon.name)}</h3>
     ${renderPokedexPokemonTypes(pokemon.types)}
   </div>`;
@@ -64,21 +66,21 @@ async function renderPokemon(id) {
 
 function setPokemonBorderMouseOut(length) {
   if (length == 1) {
-    return "this.style.border = '2px solid white'";
+    return "this.style.border='2px solid white'";
   }
-  return "this.style.borderImage = 'linear-gradient(#FFFFFF, #FFFFFF) 1'";
+  return "this.style.borderImage='linear-gradient(#FFFFFF, #FFFFFF) 1'";
 }
 
 function setPokemonBorderMouseOver(types) {
   if (types.length == 1) {
     return (
-      "this.style.border = '2px solid " +
+      "this.style.border='2px solid " +
       pokemonTypeInfo[types[0].type.name].colour +
       "'"
     );
   }
   return (
-    "this.style.borderImage = 'linear-gradient(90deg," +
+    "this.style.borderImage='linear-gradient(90deg," +
     pokemonTypeInfo[types[0].type.name].colour +
     "," +
     pokemonTypeInfo[types[1].type.name].colour +
@@ -135,3 +137,14 @@ const pokemonTypeInfo = {
   steel: { colour: "#B8B8D0", border: "#787887", icon: "#5695A3" },
   fairy: { colour: "#EE99AC", border: "#9B6470", icon: "#EE90E6" },
 };
+
+function loadingCompletion() {
+  const loadingDiv = document.getElementById("loading-div");
+  loadingDiv.classList.add("hideLoading");
+
+  setTimeout(function () {
+    loadingDiv.classList.replace("hideLoading", "hide");
+    document.body.style.overflow = "unset";
+  }, 500);
+
+}
