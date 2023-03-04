@@ -15,11 +15,12 @@
 // https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_with_form_differences
 const POKEAPI = "https://pokeapi.co/api/v2/pokemon/";
 let pokemonList = [];
+let renderedList = [];
 let renderedPokemon = 0;
 const maxIndex = 905; // gen 8 goes up to 905 - Enamorus
 // gen 9 goes up to miraidon - 1008 but spirtes not supported by pokeAPI yet
 let numAvailable = 20; // num pokemon to be rendered
-let numRendered = 1; // index of visible pokemon
+let numRendered = 0; // index of visible pokemon
 
 async function setup() {
   getAllPokemon();
@@ -33,7 +34,7 @@ async function getAllPokemon() {
 
   for (let i = 0; i < respJson.results.length; i++) {
     pokemonList.push({
-      id: i,
+      id: i + 1,
       name: respJson.results[i].name,
     });
   }
@@ -42,14 +43,29 @@ async function getAllPokemon() {
 
 function search() {
   setTimeout(function () {
-    let search = document.getElementById("search-input").value.toLowerCase();
-    console.log(search);
+    let results = [];
+    let input = document.getElementById("search-input").value.toLowerCase();
+    for (let i = 0; i < pokemonList.length; i++) {
+      if (pokemonList[i].name) {
+        if (pokemonList[i].name.replaceAll("-", " ").includes(input)) {
+          results.push(pokemonList[i]);
+        }
+      }
+    }
+
+    document.getElementById("pokedex-list-render-container").innerHTML = "";
+
+    renderedList = results;
+    renderedPokemon = 0;
+    numRendered = 0;
+    increaseNumAvailable(30);
+    renderPokedex();
   }, 1);
 }
 
 async function renderPokedexPokemon(id) {
-  if (pokemonList[id]) {
-    let pokemonUrl = "https://pokeapi.co/api/v2/pokemon/" + id;
+  if (renderedList[id].id) {
+    let pokemonUrl = "https://pokeapi.co/api/v2/pokemon/" + renderedList[id].id;
     let response = await fetch(pokemonUrl);
     let pokemon = await response.json();
 
@@ -57,7 +73,7 @@ async function renderPokedexPokemon(id) {
       "pokedex-list-render-container"
     );
 
-    renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${id})" class="pokemon-render-result-container container center column"
+    renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${renderedList[id].id})" class="pokemon-render-result-container container center column"
         onMouseOver="${setPokemonBorderMouseOver(pokemon.types)}"
         onMouseOut="${setPokemonBorderMouseOut(pokemon.types.length)}"
       >
@@ -68,7 +84,7 @@ async function renderPokedexPokemon(id) {
           ] // needs to be changed when special forms are considered
         }">
       </div>
-      <span class="bold font-size-12">N°${id}</span>
+      <span class="bold font-size-12">N°${renderedList[id].id}</span>
       <h3>${capitalizeFirstLetter(pokemon.name)}</h3>
       ${renderPokedexPokemonTypes(pokemon.types)}
     </div>`;
@@ -152,6 +168,8 @@ function loadingCompletion() {
     document.body.style.overflow = "unset";
   }, 500);
 
+  renderedList = pokemonList;
+
   renderPokedex();
 }
 
@@ -177,9 +195,9 @@ function addNewScrollPokemon() {
 }
 
 function increaseNumAvailable(num) {
-  if (numAvailable + num <= pokemonList.length) {
+  if (numAvailable + num <= renderedList.length) {
     numAvailable += num;
   } else {
-    numAvailable = pokemonList.length;
+    numAvailable = renderedList.length;
   }
 }

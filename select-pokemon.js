@@ -232,10 +232,12 @@ async function renderEvolutionChain(species) {
     chainHtml += `<img onclick="displayPokemonInfo(${evolution[0]})" class="selected-pokemon-evolution-sprite"
         src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution[0]}.png">
       </div>`;
-    if (evolDetails[0] === "level-up") {
-      chainHtml += `<div class="selected-pokemon-evolution-level-container bold font-size-12">${
-        "Lv. " + evolDetails[1]
-      } </div>`;
+    if (evolution !== evolutionArr[evolutionArr.length - 1]) {
+      let evolMethod = "";
+      if (evolDetails[0] === "level-up") {
+        evolMethod = "Lv. " + evolDetails[1];
+      }
+      chainHtml += `<div class="selected-pokemon-evolution-level-container bold font-size-12">${evolMethod} </div>`;
     }
   }
   document.getElementById(`selected-pokemon-evolution-chain`).innerHTML =
@@ -271,7 +273,6 @@ async function getEvolutionChain(species) {
     ]);
     chain = chain.evolves_to[0];
   }
-
   return evolutionArr;
 }
 
