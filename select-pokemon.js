@@ -87,14 +87,11 @@ async function renderAbilities(abilitiesObj) {
 }
 
 async function renderWeaknesses(weaknesses) {
-  document.getElementById(`selected-pokemon-weaknesses`).innerHTML =
-    weaknesses.size < 6
-      ? `<div
-          class="selected-pokemon-weakness-icon"
-          style="background: #8f9396">
-          2X
-        </div>`
-      : "";
+  document.getElementById(`selected-pokemon-weaknesses`).innerHTML = `<div
+    class="selected-pokemon-weakness-icon"
+    style="background: #8f9396">
+    2X
+  </div>`;
 
   weaknesses.forEach((weakness) => {
     document.getElementById(`selected-pokemon-weaknesses`).innerHTML += `<img
@@ -144,7 +141,7 @@ async function renderNeighbours(id) {
   const leftButton = document.getElementById("left-button");
   leftButton.setAttribute(
     "onClick",
-    "javascript: " + "fetchPokemonInfo(" + leftId + ")"
+    "javascript: " + "displayPokemonInfo(" + leftId + ")"
   );
   document.getElementById("left-neighbour-name").innerHTML = titleCase(
     leftPokemon.name
@@ -158,7 +155,7 @@ async function renderNeighbours(id) {
   const rightButton = document.getElementById("right-button");
   rightButton.setAttribute(
     "onClick",
-    "javascript: " + "fetchPokemonInfo(" + rightId + ")"
+    "javascript: " + "displayPokemonInfo(" + rightId + ")"
   );
   document.getElementById("right-neighbour-name").innerHTML = titleCase(
     rightPokemon.name
@@ -236,7 +233,7 @@ async function renderEvolutionChain(species) {
         src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution[0]}.png">
       </div>`;
     if (evolDetails[0] === "level-up") {
-      chainHtml += `<div class="selected-pokemon-evolution-level-container bold">${
+      chainHtml += `<div class="selected-pokemon-evolution-level-container bold font-size-12">${
         "Lv. " + evolDetails[1]
       } </div>`;
     }
