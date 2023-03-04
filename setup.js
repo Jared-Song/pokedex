@@ -1,5 +1,3 @@
-let totalPokemon = 0;
-let pokemonIndex = 1;
 // empoleon=395
 // exeggcute=102 for type weakness testing (7)
 // solrock=338 for type weakness testing (7)
@@ -15,53 +13,69 @@ let pokemonIndex = 1;
 // different forms/varieties of pokemon
 // https://github.com/PokeAPI/pokeapi/issues/401
 // https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_with_form_differences
-let n = 100;
-let url = "https://pokeapi.co/api/v2/pokemon/";
+const POKEAPI = "https://pokeapi.co/api/v2/pokemon/";
+let pokemonList = [];
+let renderedPokemon = 0;
+const maxIndex = 905; // gen 8 goes up to 905 - Enamorus
+// gen 9 goes up to miraidon - 1008 but spirtes not supported by pokeAPI yet
+let numAvailable = 20; // num pokemon to be rendered
+let numRendered = 1; // index of visible pokemon
 
 async function setup() {
+  getAllPokemon();
   setupTypesWeaknesses();
-  renderPokeballSearchIcon();
-  // let response = await fetch(url);
-  // let responseAsJson = await response.json();
-  // totalPokemon = responseAsJson.count;
+}
 
-  // for (let i=1; i <=10 + n; i++) {
-  //   renderPokemon(i);
-  // }
+async function getAllPokemon() {
+  let url = POKEAPI + "?limit=" + maxIndex;
+  let resp = await fetch(url);
+  let respJson = await resp.json();
 
-  for (i = pokemonIndex; i <= pokemonIndex + n; i++) {
-    // pokemon id starts at 1
-    renderPokemon(i);
+  for (let i = 0; i < respJson.results.length; i++) {
+    pokemonList.push({
+      id: i,
+      name: respJson.results[i].name,
+    });
   }
-
   loadingCompletion();
 }
 
-async function renderPokemon(id) {
-  let url = "https://pokeapi.co/api/v2/pokemon/" + id;
-  let response = await fetch(url);
-  let pokemon = await response.json();
-  // console.log(pokemon);
+function search() {
+  setTimeout(function () {
+    let search = document.getElementById("search-input").value.toLowerCase();
+    console.log(search);
+  }, 1);
+}
 
-  const renderContainer = document.getElementById(
-    "pokedex-list-render-container"
-  );
+async function renderPokedexPokemon(id) {
+  if (pokemonList[id]) {
+    let pokemonUrl = "https://pokeapi.co/api/v2/pokemon/" + id;
+    let response = await fetch(pokemonUrl);
+    let pokemon = await response.json();
 
-  renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${id})" class="pokemon-render-result-container container center column"
-      onMouseOver="${setPokemonBorderMouseOver(pokemon.types)}"
-      onMouseOut="${setPokemonBorderMouseOut(pokemon.types.length)}"
-    >
-    <div class="pokedex-sprite-container">
-      <img class="pokedex-sprite" src="${
-        pokemon.sprites.versions["generation-v"]["black-white"].animated[
-          "front_default"
-        ] // needs to be changed when special forms are considered
-      }">
-    </div>
-    <span class="bold font-size-12">N°${id}</span>
-    <h3>${capitalizeFirstLetter(pokemon.name)}</h3>
-    ${renderPokedexPokemonTypes(pokemon.types)}
-  </div>`;
+    const renderContainer = document.getElementById(
+      "pokedex-list-render-container"
+    );
+
+    renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${id})" class="pokemon-render-result-container container center column"
+        onMouseOver="${setPokemonBorderMouseOver(pokemon.types)}"
+        onMouseOut="${setPokemonBorderMouseOut(pokemon.types.length)}"
+      >
+      <div class="pokedex-sprite-container">
+        <img class="pokedex-sprite" src="${
+          pokemon.sprites.versions["generation-v"]["black-white"].animated[
+            "front_default"
+          ] // needs to be changed when special forms are considered
+        }">
+      </div>
+      <span class="bold font-size-12">N°${id}</span>
+      <h3>${capitalizeFirstLetter(pokemon.name)}</h3>
+      ${renderPokedexPokemonTypes(pokemon.types)}
+    </div>`;
+
+    numRendered += 1;
+    renderPokedex();
+  }
 }
 
 function setPokemonBorderMouseOut(length) {
@@ -90,15 +104,6 @@ function setPokemonBorderMouseOver(types) {
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function renderPokeballSearchIcon() {
-  const container = document.getElementById("start-search-button-container");
-
-  container.innerHTML += `<img
-    id="start-search-button-icon"
-    src="resources/pokeball-search-icon.png"
-  />`;
 }
 
 function renderPokedexPokemonTypes(types) {
@@ -147,4 +152,34 @@ function loadingCompletion() {
     document.body.style.overflow = "unset";
   }, 500);
 
+  renderPokedex();
+}
+
+window.addEventListener("scroll", function () {
+  addNewScrollPokemon();
+});
+
+function renderPokedex() {
+  if (numRendered <= numAvailable) {
+    renderPokedexPokemon(numRendered);
+  }
+}
+
+function addNewScrollPokemon() {
+  if (
+    window.scrollY + 100 >=
+    document.documentElement.scrollHeight -
+      document.documentElement.clientHeight
+  ) {
+    increaseNumAvailable(20);
+    renderPokedex();
+  }
+}
+
+function increaseNumAvailable(num) {
+  if (numAvailable + num <= pokemonList.length) {
+    numAvailable += num;
+  } else {
+    numAvailable = pokemonList.length;
+  }
 }

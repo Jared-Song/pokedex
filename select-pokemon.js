@@ -1,6 +1,4 @@
 let allTypes = {};
-const maxIndex = 1008; // gen 9 goes up to miraidon - 1008 but spirtes not supported by pokeAPI yet
-const pokemonApi = "https://pokeapi.co/api/v2/pokemon/";
 
 function displayPokemonInfo(id) {
   if (window.innerWidth > 1100) {
@@ -138,9 +136,9 @@ async function renderNeighbours(id) {
   const leftId = (id + maxIndex - 1) % maxIndex || maxIndex;
   const rightId = (id + 1) % maxIndex;
 
-  const leftPokemonResponse = await fetch(pokemonApi + leftId);
+  const leftPokemonResponse = await fetch(POKEAPI + leftId);
   const leftPokemon = await leftPokemonResponse.json();
-  const rightPokemonResponse = await fetch(pokemonApi + rightId);
+  const rightPokemonResponse = await fetch(POKEAPI + rightId);
   const rightPokemon = await rightPokemonResponse.json();
   // console.log(leftPokemon);
   const leftButton = document.getElementById("left-button");
@@ -173,7 +171,7 @@ async function renderNeighbours(id) {
 }
 
 async function fetchPokemonInfo(id) {
-  const urlPokemon = pokemonApi + id;
+  const urlPokemon = POKEAPI + id;
   const pokemonResponse = await fetch(urlPokemon);
   const pokemon = await pokemonResponse.json();
 
@@ -232,11 +230,10 @@ function cleanFlavourText(text) {
 async function renderEvolutionChain(species) {
   let chainHtml = "";
   const evolutionArr = await getEvolutionChain(species);
-  // console.log(evolutionArr);
   for (const evolution of evolutionArr) {
     const evolDetails = evolution[1];
-    chainHtml += `<img class="selected-pokemon-evolution-sprite"
-      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution[0]}.png">
+    chainHtml += `<img onclick="displayPokemonInfo(${evolution[0]})" class="selected-pokemon-evolution-sprite"
+        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution[0]}.png">
       </div>`;
     if (evolDetails[0] === "level-up") {
       chainHtml += `<div class="selected-pokemon-evolution-level-container bold">${

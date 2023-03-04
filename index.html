@@ -16,13 +16,22 @@
 
   <body onload="setup()" class="row">
     <div id="loading-div">
-      <img src="resources/pokeball-icon.png" class="loading-ball" />
+      <img src="resources/pokeball-icon-large.png" class="loading-ball" />
     </div>
 
     <div id="pokedex-list" class="column">
       <div id="search-bar-container" class="row container margin-40">
-        <input id="search-input" placeholder="Search your Pokémon!" />
-        <div id="start-search-button-container" class="center"></div>
+        <input
+          id="search-input"
+          onkeydown="search()"
+          placeholder="Search your Pokémon!"
+        />
+        <div id="start-search-button-container" class="center">
+          <img
+            id="start-search-button-icon"
+            src="resources/pokeball-icon-large.png"
+          />
+        </div>
       </div>
 
       <div id="pokedex-list-render-container"></div>
@@ -213,7 +222,7 @@
 
     <img
       id="loading-pokemon"
-      src="resources/pokeball-icon.png"
+      src="resources/pokeball-icon-large.png"
       class="loading-ball"
     />
   </body>
