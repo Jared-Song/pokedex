@@ -494,6 +494,12 @@ input {
 }
 
 @media (max-width: 1100px) {
+
+  .progress-bar {
+    width: 300px;
+    height: 3px;
+  }
+
   #pokedex-list {
     margin: 0;
   }
