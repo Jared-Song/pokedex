@@ -174,7 +174,7 @@ async function renderPokedexPokemon(id) {
         }">
       </div>
       <span class="bold font-size-12">N°${renderedList[id].id}</span>
-      <h3>${capitalizeFirstLetter(renderedList[id].name)}</h3>
+      <h3>${formatString(renderedList[id].name)}</h3>
       ${renderPokedexPokemonTypes(renderedList[id].types)}
     </div>`;
 
@@ -203,10 +203,6 @@ function setPokemonBorderMouseOver(types) {
     pokemonTypeInfo[types[1]].colour +
     ") 1'"
   );
-}
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function renderPokedexPokemonTypes(types) {

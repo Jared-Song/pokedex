@@ -12,7 +12,7 @@ function displayPokemonInfo(id) {
   }
 }
 
-function formatAbilityName(name) {
+function formatString(name) {
   // capitalises first letters and removes hyphens
   return name
     .replace(/\b\w/g, function (l) {
@@ -41,7 +41,7 @@ async function renderAbilities(abilitiesObj) {
   element.innerHTML = "";
 
   abilitiesObj.forEach((abilityObj) => {
-    let abilityName = formatAbilityName(abilityObj.ability.name);
+    let abilityName = formatString(abilityObj.ability.name);
     const hiddenClass = abilityObj.is_hidden
       ? 'style="outline: 1px solid red"'
       : "";
@@ -72,7 +72,7 @@ async function renderWeaknesses(weaknesses) {
       class="selected-pokemon-weakness-icon"
       src="resources/type-icons/${weakness}.svg"
       style="background: ${pokemonTypeInfo[weakness].icon};"
-      title=${titleCase(weakness)}
+      title=${formatString(weakness)}
     />`;
   });
 }
@@ -112,7 +112,7 @@ async function renderNeighbours(id) {
     "onClick",
     "javascript: " + "displayPokemonInfo(" + leftId + ")"
   );
-  document.getElementById("left-neighbour-name").innerHTML = titleCase(
+  document.getElementById("left-neighbour-name").innerHTML = formatString(
     pokemonList[leftId - 1].name
   );
 
@@ -127,7 +127,7 @@ async function renderNeighbours(id) {
     "onClick",
     "javascript: " + "displayPokemonInfo(" + rightId + ")"
   );
-  document.getElementById("right-neighbour-name").innerHTML = titleCase(
+  document.getElementById("right-neighbour-name").innerHTML = formatString(
     pokemonList[rightId - 1].name
   );
   document.getElementById("right-neighbour-id").innerHTML = "#" + rightId;
@@ -146,7 +146,7 @@ async function fetchPokemonInfo(id) {
     ".png";
 
   document.getElementById("selected-pokemon-id").innerHTML = "#" + id;
-  document.getElementById("selected-pokemon-name").innerHTML = titleCase(
+  document.getElementById("selected-pokemon-name").innerHTML = formatString(
     pokemon.name
   );
   document.getElementById("selected-pokemon-title").innerHTML = pokemon.species;
@@ -200,8 +200,27 @@ async function renderEvolutionChain(evolutionChainUrl) {
       let evolMethod = "?";
       if (evolDetails[0] === "level-up") {
         evolMethod = "Lv. " + evolDetails[1];
+      } else if (evolDetails[0] === "min-happiness") {
+        evolMethod = evolDetails[1] + " Happiness";
+      } else {
+        evolMethod = formatString(evolDetails[0]);
       }
-      chainHtml += `<div class="selected-pokemon-evolution-level-container bold font-size-12">${evolMethod} </div>`;
+      chainHtml += `<div class="selected-pokemon-evolution-trigger bold font-size-12">`;
+
+      if (evolDetails[0] === "use-item") {
+        evolMethod = formatString(evolDetails[1]);
+        let url = evolDetails[2];
+        let resp = await fetch(url);
+        let json = await resp.json();
+        chainHtml += `<img
+          class="selected-pokemon-evolution-item"
+          src=${json.sprites.default}
+          title="${evolMethod}"
+        />`;
+      } else {
+        chainHtml += evolMethod;
+      }
+      chainHtml += `</div>`;
     }
   }
   document.getElementById(`selected-pokemon-evolution-chain`).innerHTML =
@@ -226,11 +245,18 @@ async function getEvolutionChain(chainUrl) {
     let evolution_info = [];
 
     if (evolution_details?.trigger?.name !== undefined) {
-      evolution_info.push(evolution_details.trigger.name);
-      if (evolution_details.trigger.name === "level-up") {
+      let trigger = evolution_details.trigger.name;
+      if (evolution_details.min_happiness) {
+        trigger = "min-happiness";
+      }
+      evolution_info.push(trigger);
+      if (trigger === "level-up") {
         evolution_info.push(evolution_details.min_level);
-      } else if (evolution_details.trigger.name === "use-item") {
+      } else if (trigger === "use-item") {
         evolution_info.push(evolution_details.item.name);
+        evolution_info.push(evolution_details.item.url);
+      } else if (trigger === "min-happiness") {
+        evolution_info.push(evolution_details.min_happiness);
       }
     }
     evolutionArr.push([id, evolution_info]);
@@ -253,10 +279,6 @@ function getTypeWeaknesses(types) {
   }
 
   return dbl_damage_from;
-}
-
-function titleCase(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function slideInSelectedPokemon() {

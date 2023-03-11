@@ -356,12 +356,16 @@ input {
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-.selected-pokemon-evolution-level-container {
-  width: 50px;
+.selected-pokemon-evolution-trigger {
+  width: 15%;
   background-color: #f6f8fc;
   padding: 8px 0;
   border-radius: 30px;
   margin: 5px;
+}
+
+.selected-pokemon-evolution-item {
+  width: 25px;
 }
 
 #loading-div {
