@@ -1,6 +1,6 @@
 # Pokedex
 
-- [Live]()
+- [Live](https://jared-song-pokedex.vercel.app/)
 - [PokeAPI](https://pokeapi.co/)
 - [Design](https://dribbble.com/shots/15128634-Pokemon-Pokedex-Website-Redesign-Concept/attachments/6864101?mode=media)
 - [Colour Codes](https://bulbapedia.bulbagarden.net/wiki/Category:Type_color_templates)
