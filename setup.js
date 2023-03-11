@@ -17,28 +17,120 @@ const POKEAPI = "https://pokeapi.co/api/v2/pokemon/";
 let pokemonList = [];
 let renderedList = [];
 let renderedPokemon = 0;
-const maxIndex = 905; // gen 8 goes up to 905 - Enamorus
-// gen 9 goes up to miraidon - 1008 but spirtes not supported by pokeAPI yet
+const maxIndex = 649;
+// gen 5 => 694 - Genesect - sprites not provided after this id
+// gen 8 => 905 - Enamorus
+// gen 9 -> 1008 - Miraidon
 let numAvailable = 20; // num pokemon to be rendered
 let numRendered = 0; // index of visible pokemon
 
 async function setup() {
   getAllPokemon();
-  setupTypesWeaknesses();
+  setupTypes();
 }
 
 async function getAllPokemon() {
   let url = POKEAPI + "?limit=" + maxIndex;
   let resp = await fetch(url);
   let respJson = await resp.json();
-
+  // console.log(respJson);
   for (let i = 0; i < respJson.results.length; i++) {
     pokemonList.push({
       id: i + 1,
       name: respJson.results[i].name,
+      types: [],
+      species: "",
+      flavour_text: "",
+      height: "",
+      weight: "",
+      stats: [],
+      base_exp: 0,
+      evolution_chain_url: "",
     });
   }
+  setupPokemon();
   loadingCompletion();
+}
+
+async function setupPokemon() {
+  const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/";
+  const speciesUrl = "https://pokeapi.co/api/v2/pokemon-species/";
+  for (let i = 1; i <= maxIndex; i++) {
+    let pokemon = pokemonUrl + i;
+    let pokemonResp = await fetch(pokemon);
+    let pokemonJson = await pokemonResp.json();
+
+    pokemonList[i - 1].abilities = pokemonJson.abilities;
+    pokemonList[i - 1].height = pokemonJson.height;
+    pokemonList[i - 1].weight = pokemonJson.weight;
+    pokemonList[i - 1].base_exp = pokemonJson.base_experience;
+    pokemonList[i - 1].stats = pokemonJson.stats;
+
+    let species = speciesUrl + i;
+    let speciesResp = await fetch(species);
+    let speciesJson = await speciesResp.json();
+
+    pokemonList[i - 1].species = speciesJson.genera["7"].genus;
+
+    flavour_text_entries = speciesJson.flavor_text_entries;
+    // could eventually have multiple FT for each pokemon
+    flavour_text_entries.forEach((entry) => {
+      if (entry.language.name == "en") {
+        pokemonList[i - 1].flavour_text = cleanFlavourText(entry.flavor_text);
+      }
+    });
+    pokemonList[i - 1].evolution_chain_url = speciesJson.evolution_chain.url;
+  }
+}
+
+function cleanFlavourText(text) {
+  // https://github.com/andreferreiradlw/pokestats/issues/41
+  return text
+    .replace("\f", "\n")
+    .replace("\u00ad\n", "")
+    .replace("\u00ad", "")
+    .replace(" -\n", " - ")
+    .replace("-\n", "-")
+    .replace("\n", " ");
+}
+
+async function setupTypes() {
+  const urlAllTypes = "https://pokeapi.co/api/v2/type";
+  const allTypesResponse = await fetch(urlAllTypes);
+  const allTypesObj = await allTypesResponse.json();
+
+  for (const type of allTypesObj.results) {
+    await setupType(type);
+  }
+}
+
+async function setupType(typeObj) {
+  const urlType = typeObj.url;
+  const typeResponse = await fetch(urlType);
+  const type = await typeResponse.json();
+
+  const doubleDamageFrom = type.damage_relations.double_damage_from;
+  const halfDamageFrom = type.damage_relations.half_damage_from;
+  let dbl_dmg = [];
+  let half_dmg = [];
+  doubleDamageFrom.forEach((obj) => {
+    dbl_dmg.push(obj.name);
+  });
+  halfDamageFrom.forEach((obj) => {
+    half_dmg.push(obj.name);
+  });
+
+  allTypes[type.name] = [dbl_dmg, half_dmg];
+
+  type.pokemon.forEach((pokemonType) => {
+    const pokemonId = pokemonType.pokemon.url
+      .replace("https://pokeapi.co/api/v2/pokemon/", "")
+      .replace("/", "");
+
+    if (pokemonList[pokemonId - 1]) {
+      pokemonList[pokemonId - 1].types[pokemonType.slot - 1] = type.name;
+    }
+  });
 }
 
 function search() {
@@ -68,12 +160,15 @@ async function renderPokedexPokemon(id) {
     let pokemonUrl = "https://pokeapi.co/api/v2/pokemon/" + renderedList[id].id;
     let response = await fetch(pokemonUrl);
     let pokemon = await response.json();
-
+    // console.log(renderedList[id].types);
+    // console.log(pokemon.types);
     const renderContainer = document.getElementById(
       "pokedex-list-render-container"
     );
 
-    renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${renderedList[id].id})" class="pokemon-render-result-container container center column"
+    renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${
+      renderedList[id].id
+    })" class="pokemon-render-result-container container center column"
         onMouseOver="${setPokemonBorderMouseOver(pokemon.types)}"
         onMouseOut="${setPokemonBorderMouseOut(pokemon.types.length)}"
       >
@@ -85,7 +180,7 @@ async function renderPokedexPokemon(id) {
         }">
       </div>
       <span class="bold font-size-12">N°${renderedList[id].id}</span>
-      <h3>${capitalizeFirstLetter(pokemon.name)}</h3>
+      <h3>${capitalizeFirstLetter(renderedList[id].name)}</h3>
       ${renderPokedexPokemonTypes(pokemon.types)}
     </div>`;
 
@@ -178,7 +273,7 @@ window.addEventListener("scroll", function () {
 });
 
 function renderPokedex() {
-  if (numRendered <= numAvailable) {
+  if (numRendered < numAvailable) {
     renderPokedexPokemon(numRendered);
   }
 }
