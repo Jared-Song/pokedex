@@ -562,6 +562,10 @@ input {
     width: 100%;
   }
 
+  .pokemon-type-container {
+    font-size: 8px;
+  }
+
   body {
     width: 90%;
   }
