@@ -25,15 +25,15 @@ let numAvailable = 20; // num pokemon to be rendered
 let numRendered = 0; // index of visible pokemon
 
 async function setup() {
-  getAllPokemon();
-  setupTypes();
+  await getAllPokemon();
+  await setupTypes();
+  loadingCompletion();
 }
 
 async function getAllPokemon() {
   let url = POKEAPI + "?limit=" + maxIndex;
   let resp = await fetch(url);
   let respJson = await resp.json();
-  // console.log(respJson);
   for (let i = 0; i < respJson.results.length; i++) {
     pokemonList.push({
       id: i + 1,
@@ -49,7 +49,6 @@ async function getAllPokemon() {
     });
   }
   setupPokemon();
-  loadingCompletion();
 }
 
 async function setupPokemon() {
@@ -157,11 +156,6 @@ function search() {
 
 async function renderPokedexPokemon(id) {
   if (renderedList[id].id) {
-    let pokemonUrl = "https://pokeapi.co/api/v2/pokemon/" + renderedList[id].id;
-    let response = await fetch(pokemonUrl);
-    let pokemon = await response.json();
-    // console.log(renderedList[id].types);
-    // console.log(pokemon.types);
     const renderContainer = document.getElementById(
       "pokedex-list-render-container"
     );
@@ -169,19 +163,19 @@ async function renderPokedexPokemon(id) {
     renderContainer.innerHTML += `<div onclick="displayPokemonInfo(${
       renderedList[id].id
     })" class="pokemon-render-result-container container center column"
-        onMouseOver="${setPokemonBorderMouseOver(pokemon.types)}"
-        onMouseOut="${setPokemonBorderMouseOut(pokemon.types.length)}"
+        onMouseOver="${setPokemonBorderMouseOver(renderedList[id].types)}"
+        onMouseOut="${setPokemonBorderMouseOut(renderedList[id].types.length)}"
       >
       <div class="pokedex-sprite-container">
         <img class="pokedex-sprite" src="${
-          pokemon.sprites.versions["generation-v"]["black-white"].animated[
-            "front_default"
-          ] // needs to be changed when special forms are considered
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/" +
+          renderedList[id].id +
+          ".gif" // needs to be changed when special forms are considered
         }">
       </div>
       <span class="bold font-size-12">N°${renderedList[id].id}</span>
       <h3>${capitalizeFirstLetter(renderedList[id].name)}</h3>
-      ${renderPokedexPokemonTypes(pokemon.types)}
+      ${renderPokedexPokemonTypes(renderedList[id].types)}
     </div>`;
 
     numRendered += 1;
@@ -199,16 +193,14 @@ function setPokemonBorderMouseOut(length) {
 function setPokemonBorderMouseOver(types) {
   if (types.length == 1) {
     return (
-      "this.style.border='2px solid " +
-      pokemonTypeInfo[types[0].type.name].colour +
-      "'"
+      "this.style.border='2px solid " + pokemonTypeInfo[types[0]].colour + "'"
     );
   }
   return (
     "this.style.borderImage='linear-gradient(90deg," +
-    pokemonTypeInfo[types[0].type.name].colour +
+    pokemonTypeInfo[types[0]].colour +
     "," +
-    pokemonTypeInfo[types[1].type.name].colour +
+    pokemonTypeInfo[types[1]].colour +
     ") 1'"
   );
 }
@@ -219,14 +211,13 @@ function capitalizeFirstLetter(string) {
 
 function renderPokedexPokemonTypes(types) {
   let html = '<div class="row">';
-
-  types.forEach(({ type: { name } }) => {
+  types.forEach((type) => {
     html += `
       <div class="pokemon-type-container" 
-        style="background: ${pokemonTypeInfo[name].colour}; 
-               border: 2px solid ${pokemonTypeInfo[name].border};"
+        style="background: ${pokemonTypeInfo[type].colour}; 
+               border: 2px solid ${pokemonTypeInfo[type].border};"
       >
-        <h3>${name.toUpperCase()}</h3>             
+        <h3>${type.toUpperCase()}</h3>             
       </div>`;
   });
 

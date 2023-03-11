@@ -216,7 +216,6 @@ async function getEvolutionChain(chainUrl) {
   let chain = evolutionChain.chain;
 
   while (chain) {
-    // console.log(chain);
     const id = chain.species.url
       .replace("https://pokeapi.co/api/v2/pokemon-species/", "")
       .replace("/", "");
