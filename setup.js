@@ -1,26 +1,8 @@
-// empoleon=395
-// exeggcute=102 for type weakness testing (7)
-// solrock=338 for type weakness testing (7)
-// ^^ https://pokemon-archive.fandom.com/wiki/Move_Immunity_Abilities
-
-// eevee=133 for item/evol testing
-// gallade pokedex entry language is korean for some reason
-// heatran sprite looks off
-
-// shaymin, deoxys, keldeo, rotom, giratina (487), wormadom for unique names/forms
-// -- checkout species.varieties --> special forms start at pokemonId 10001
-// pikachu sinnh cap id 10096
-// different forms/varieties of pokemon
-// https://github.com/PokeAPI/pokeapi/issues/401
-// https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_with_form_differences
 const POKEAPI = "https://pokeapi.co/api/v2/pokemon/";
 let pokemonList = [];
 let renderedList = [];
 let renderedPokemon = 0;
 const maxIndex = 649;
-// gen 5 => 694 - Genesect - sprites not provided after this id
-// gen 8 => 905 - Enamorus
-// gen 9 -> 1008 - Miraidon
 let numAvailable = 20; // num pokemon to be rendered
 let numRendered = 0; // index of visible pokemon
 
