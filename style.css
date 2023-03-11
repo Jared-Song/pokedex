@@ -377,6 +377,22 @@ input {
   justify-content: center;
   z-index: 99;
   background-color: white;
+  flex-direction: column;
+}
+
+.progress-bar {
+  margin-top: 20px;
+  width: 500px;
+  height: 5px;
+  background: #505a5d;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: #74cf92;
+  transition: all 0.1s;
 }
 
 #selected-pokemon-responsive-background {

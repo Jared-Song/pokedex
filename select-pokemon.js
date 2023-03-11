@@ -103,7 +103,7 @@ function renderStats(stats) {
   });
 }
 
-async function renderNeighbours(id) {
+function renderNeighbours(id) {
   const leftId = (id + maxIndex - 1) % maxIndex || maxIndex;
   const rightId = (id + 1) % maxIndex || maxIndex;
 
@@ -137,8 +137,7 @@ async function renderNeighbours(id) {
     ".gif";
 }
 
-async function fetchPokemonInfo(id) {
-  const pokemon = pokemonList[id - 1];
+function renderStaticInfo(id) {
   document.getElementById("selected-pokemon-info").classList.remove("hide");
   document.getElementById("selected-pokemon-sprite").src =
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" +
@@ -146,6 +145,9 @@ async function fetchPokemonInfo(id) {
     ".png";
 
   document.getElementById("selected-pokemon-id").innerHTML = "#" + id;
+}
+
+function renderPokemonInfo(pokemon) {
   document.getElementById("selected-pokemon-name").innerHTML = formatString(
     pokemon.name
   );
@@ -169,8 +171,14 @@ async function fetchPokemonInfo(id) {
     pokemon.base_exp;
   renderStats(pokemon.stats);
   renderEvolutionChain(pokemon.evolution_chain_url);
-  renderNeighbours(id);
   setupResponsiveBackground(pokemon.types);
+}
+
+async function fetchPokemonInfo(id) {
+  const pokemon = pokemonList[id - 1];
+  renderNeighbours(id);
+  renderStaticInfo(id);
+  renderPokemonInfo(pokemon);
   slideInSelectedPokemon();
   if (window.innerWidth < 1100) {
     openPokemonResponsiveInfo();

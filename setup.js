@@ -30,12 +30,13 @@ async function getAllPokemon() {
       evolution_chain_url: "",
     });
   }
-  setupPokemon();
+  await setupPokemon();
 }
 
 async function setupPokemon() {
   const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/";
   const speciesUrl = "https://pokeapi.co/api/v2/pokemon-species/";
+  let progress = 0;
   for (let i = 1; i <= maxIndex; i++) {
     let pokemon = pokemonUrl + i;
     let pokemonResp = await fetch(pokemon);
@@ -61,7 +62,13 @@ async function setupPokemon() {
       }
     });
     pokemonList[i - 1].evolution_chain_url = speciesJson.evolution_chain.url;
+    progress += 100 / maxIndex;
+    updateProgressBar(progress);
   }
+}
+
+function updateProgressBar(value) {
+  document.querySelector(".progress-bar-fill").style.width = value + "%";
 }
 
 function cleanFlavourText(text) {

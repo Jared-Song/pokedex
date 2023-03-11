@@ -36,3 +36,4 @@
   - gen 5: 694 - Genesect - sprites not provided after this id
   - gen 8: 905 - Enamorus
   - gen 9: 1010 - Iron Leaves - current max
+- Improve rendering time: allow fetch on demand to match uncached server speed
