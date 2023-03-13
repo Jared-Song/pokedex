@@ -509,7 +509,7 @@ input {
   }
 
   #selected-pokemon-sprite {
-    bottom: 72vh;
+    bottom: 67vh;
   }
 
   .pokemon-type-container {
@@ -527,7 +527,7 @@ input {
     margin: 0;
     width: calc(100% - 30px);
     display: none;
-    height: 77vh;
+    height: 72vh;
   }
 
   #selected-pokemon-responsive-background {
