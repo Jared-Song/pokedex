@@ -151,6 +151,7 @@ function renderStaticInfo(id) {
 }
 
 function renderPokemonInfo(pokemon) {
+  renderEvolutionChain(pokemon.evolution_chain_url);
   document.getElementById("selected-pokemon-name").innerHTML = formatString(
     pokemon.name
   );
@@ -173,15 +174,14 @@ function renderPokemonInfo(pokemon) {
   document.getElementById("selected-pokemon-base-exp").innerHTML =
     pokemon.base_exp;
   renderStats(pokemon.stats);
-  renderEvolutionChain(pokemon.evolution_chain_url);
   setupResponsiveBackground(pokemon.types);
 }
 
 async function fetchPokemonInfo(id) {
   const pokemon = pokemonList[id - 1];
-  renderNeighbours(id);
-  renderStaticInfo(id);
-  renderPokemonInfo(pokemon);
+  await renderNeighbours(id);
+  await renderStaticInfo(id);
+  await renderPokemonInfo(pokemon);
   slideInSelectedPokemon();
   if (window.innerWidth < 1100) {
     openPokemonResponsiveInfo();
