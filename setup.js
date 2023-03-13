@@ -33,8 +33,7 @@ async function getAllPokemon() {
       fetched: false,
     };
   }
-  await setupPokemon();
-  setupOtherPokemon(); // runs in background
+  setupPokemon();
 }
 
 async function fetchPokemon(id) {
@@ -67,16 +66,7 @@ async function fetchPokemon(id) {
 }
 
 async function setupPokemon() {
-  let progress = 0;
-  for (let i = 1; i <= 20; i++) {
-    await fetchPokemon(i);
-    progress += 80 / 20;
-    updateProgressBar(progress);
-  }
-}
-
-async function setupOtherPokemon() {
-  for (let i = 21; i <= maxIndex; i++) {
+  for (let i = 1; i <= maxIndex; i++) {
     await fetchPokemon(i);
   }
 }
@@ -85,10 +75,10 @@ async function setupTypes() {
   const urlAllTypes = "https://pokeapi.co/api/v2/type";
   const allTypesResponse = await fetch(urlAllTypes);
   const allTypesObj = await allTypesResponse.json();
-  let progress = 80;
+  let progress = 0;
   for (const type of allTypesObj.results) {
     await setupType(type);
-    progress += 20 / allTypesObj.results.length;
+    progress += 100 / allTypesObj.results.length;
     updateProgressBar(progress);
   }
 }
