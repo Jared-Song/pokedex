@@ -20,7 +20,7 @@ async function renderPokedexPokemon(id) {
         >
         <div class="pokedex-sprite-container">
           <img class="pokedex-sprite" src="${
-            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/" +
+            "resources/sprites/pokemon/versions/generation-v/black-white/animated/" +
             renderedList[id].id +
             ".gif" // needs to be changed when special forms are considered
           }">

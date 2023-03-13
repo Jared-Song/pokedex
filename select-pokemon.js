@@ -112,7 +112,7 @@ function renderNeighbours(id) {
 
   document.getElementById("left-neighbour-id").innerHTML = "#" + leftId;
   document.getElementById("left-neighbour-sprite").src =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/" +
+    "resources/sprites/pokemon/versions/generation-v/black-white/animated/" +
     leftId +
     ".gif";
 
@@ -126,7 +126,7 @@ function renderNeighbours(id) {
   );
   document.getElementById("right-neighbour-id").innerHTML = "#" + rightId;
   document.getElementById("right-neighbour-sprite").src =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/" +
+    "resources/sprites/pokemon/versions/generation-v/black-white/animated/" +
     rightId +
     ".gif";
 }
@@ -134,9 +134,7 @@ function renderNeighbours(id) {
 function renderStaticInfo(id) {
   document.getElementById("selected-pokemon-info").classList.remove("hide");
   document.getElementById("selected-pokemon-sprite").src =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" +
-    id +
-    ".png";
+    "resources/sprites/pokemon/other/official-artwork/" + id + ".png";
 
   document.getElementById("selected-pokemon-id").innerHTML = "#" + id;
 }
@@ -185,7 +183,7 @@ async function renderEvolutionChain(evolutionChainUrl) {
   for (const evolution of evolutionArr) {
     const evolDetails = evolution[1];
     chainHtml += `<img onclick="displayPokemonInfo(${evolution[0]})" class="selected-pokemon-evolution-sprite"
-        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution[0]}.png">
+        src="resources/sprites/pokemon/${evolution[0]}.png">
       </div>`;
     if (evolution !== evolutionArr[evolutionArr.length - 1]) {
       let evolMethod = "?";
