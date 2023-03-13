@@ -15,15 +15,6 @@ async function displayPokemonInfo(id) {
   }
 }
 
-function formatString(name) {
-  // capitalises first letters and removes hyphens
-  return name
-    .replace(/\b\w/g, function (l) {
-      return l.toUpperCase();
-    })
-    .replace(/-/g, " ");
-}
-
 function renderPokemonTypes(types) {
   let typeHtml = `<div class="row center">`;
   types.forEach((type) => {
@@ -188,17 +179,6 @@ async function fetchPokemonInfo(id) {
   }
 }
 
-function cleanFlavourText(text) {
-  // https://github.com/andreferreiradlw/pokestats/issues/41
-  return text
-    .replace("\f", "\n")
-    .replace("\u00ad\n", "")
-    .replace("\u00ad", "")
-    .replace(" -\n", " - ")
-    .replace("-\n", "-")
-    .replace("\n", " ");
-}
-
 async function renderEvolutionChain(evolutionChainUrl) {
   let chainHtml = "";
   const evolutionArr = await getEvolutionChain(evolutionChainUrl);
@@ -275,112 +255,3 @@ async function getEvolutionChain(chainUrl) {
   }
   return evolutionArr;
 }
-
-function getTypeWeaknesses(types) {
-  const dbl_damage_from = new Set();
-  const half_damage_from = new Set();
-  types.forEach((typeObj) => {
-    const [double_damage, half_damage] = allTypes[typeObj];
-    double_damage.forEach((type) => dbl_damage_from.add(type));
-    half_damage.forEach((type) => half_damage_from.add(type));
-  });
-
-  for (const type of half_damage_from) {
-    dbl_damage_from.delete(type);
-  }
-
-  return dbl_damage_from;
-}
-
-function slideInSelectedPokemon() {
-  document.getElementById("selected-pokemon-placeholder").classList.add("hide");
-  document
-    .getElementById("selected-pokemon-container")
-    .classList.add("slide-in");
-  document
-    .getElementById("selected-pokemon-container")
-    .classList.remove("slide-out");
-}
-
-function slideOutSelectedPokemon() {
-  document
-    .getElementById("selected-pokemon-container")
-    .classList.remove("slide-in");
-
-  document
-    .getElementById("selected-pokemon-container")
-    .classList.add("slide-out");
-}
-
-function setupResponsiveBackground(types) {
-  document.getElementById(
-    "selected-pokemon-responsive-background"
-  ).style.background = pokemonTypeInfo[types[0]].colour;
-}
-
-function openPokemonResponsiveInfo() {
-  document
-    .getElementById("selected-pokemon-container")
-    .classList.remove("hide");
-  document.getElementById("selected-pokemon-container").style.display = "flex";
-  document
-    .getElementById("selected-pokemon-responsive-close")
-    .classList.remove("hide");
-
-  document
-    .getElementById("selected-pokemon-responsive-background")
-    .classList.remove("hide");
-
-  document.getElementById(
-    "selected-pokemon-responsive-background"
-  ).style.opacity = 0;
-  setTimeout(function () {
-    document.getElementById(
-      "selected-pokemon-responsive-background"
-    ).style.opacity = 1;
-  }, 20);
-
-  document.getElementsByTagName("html")[0].style.overflow = "hidden";
-}
-
-function closePokemonInfo() {
-  setTimeout(function () {
-    document.getElementById("selected-pokemon-container").classList.add("hide");
-    document
-      .getElementById("selected-pokemon-responsive-close")
-      .classList.add("hide");
-
-    document
-      .getElementById("selected-pokemon-responsive-background")
-      .classList.add("hide");
-  }, 350);
-
-  document.getElementById(
-    "selected-pokemon-responsive-background"
-  ).style.opacity = 1;
-  setTimeout(function () {
-    document.getElementById(
-      "selected-pokemon-responsive-background"
-    ).style.opacity = 0;
-  }, 10);
-
-  document.getElementsByTagName("html")[0].style.overflow = "unset";
-
-  slideOutSelectedPokemon();
-}
-
-window.addEventListener("resize", function () {
-  if (
-    document
-      .getElementById("selected-pokemon-container")
-      .classList.contains("slide-out")
-  ) {
-    document
-      .getElementById("selected-pokemon-container")
-      .classList.replace("slide-out", "slide-in");
-  }
-
-  if (window.innerWidth > 1100) {
-    document.getElementsByTagName("html")[0].style.overflow = "unset";
-  }
-});
