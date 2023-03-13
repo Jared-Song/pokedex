@@ -1,12 +1,12 @@
 const POKEAPI = "https://pokeapi.co/api/v2/pokemon/";
 const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/";
 const speciesUrl = "https://pokeapi.co/api/v2/pokemon-species/";
-let pokemonList = [];
 let renderedList = [];
 let renderedPokemon = 0;
 const maxIndex = 649;
 let numAvailable = 20; // num pokemon to be rendered
 let numRendered = 0; // index of visible pokemon
+let pokemonList = Array(maxIndex);
 
 async function setup() {
   await getAllPokemon();
@@ -19,7 +19,7 @@ async function getAllPokemon() {
   let resp = await fetch(url);
   let respJson = await resp.json();
   for (let i = 0; i < respJson.results.length; i++) {
-    pokemonList.push({
+    pokemonList[i] = {
       id: i + 1,
       name: respJson.results[i].name,
       types: [],
@@ -31,17 +31,20 @@ async function getAllPokemon() {
       base_exp: 0,
       evolution_chain_url: "",
       fetched: false,
-    });
+    };
   }
   await setupPokemon();
-  setupOtherPokemon();
+  setupOtherPokemon(); // runs in background
 }
 
 async function fetchPokemon(id) {
   let url = pokemonUrl + id;
   let pokemonResp = await fetch(url);
   let pokemonJson = await pokemonResp.json();
+  let species = speciesUrl + id;
 
+  let speciesResp = await fetch(species);
+  let speciesJson = await speciesResp.json();
   let pokemon = pokemonList[id - 1];
 
   pokemon.abilities = pokemonJson.abilities;
@@ -49,10 +52,6 @@ async function fetchPokemon(id) {
   pokemon.weight = pokemonJson.weight;
   pokemon.base_exp = pokemonJson.base_experience;
   pokemon.stats = pokemonJson.stats;
-
-  let species = speciesUrl + id;
-  let speciesResp = await fetch(species);
-  let speciesJson = await speciesResp.json();
 
   pokemon.species = speciesJson.genera["7"].genus;
 
@@ -78,7 +77,7 @@ async function setupPokemon() {
 
 async function setupOtherPokemon() {
   for (let i = 21; i <= maxIndex; i++) {
-    fetchPokemon(i);
+    await fetchPokemon(i);
   }
 }
 
