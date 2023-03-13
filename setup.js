@@ -1,4 +1,6 @@
 const POKEAPI = "https://pokeapi.co/api/v2/pokemon/";
+const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/";
+const speciesUrl = "https://pokeapi.co/api/v2/pokemon-species/";
 let pokemonList = [];
 let renderedList = [];
 let renderedPokemon = 0;
@@ -28,42 +30,55 @@ async function getAllPokemon() {
       stats: [],
       base_exp: 0,
       evolution_chain_url: "",
+      fetched: false,
     });
   }
   await setupPokemon();
+  setupOtherPokemon();
+}
+
+async function fetchPokemon(id) {
+  let url = pokemonUrl + id;
+  let pokemonResp = await fetch(url);
+  let pokemonJson = await pokemonResp.json();
+
+  let pokemon = pokemonList[id - 1];
+
+  pokemon.abilities = pokemonJson.abilities;
+  pokemon.height = pokemonJson.height;
+  pokemon.weight = pokemonJson.weight;
+  pokemon.base_exp = pokemonJson.base_experience;
+  pokemon.stats = pokemonJson.stats;
+
+  let species = speciesUrl + id;
+  let speciesResp = await fetch(species);
+  let speciesJson = await speciesResp.json();
+
+  pokemon.species = speciesJson.genera["7"].genus;
+
+  flavour_text_entries = speciesJson.flavor_text_entries;
+  // could eventually have multiple FT for each pokemon
+  flavour_text_entries.forEach((entry) => {
+    if (entry.language.name == "en") {
+      pokemon.flavour_text = cleanFlavourText(entry.flavor_text);
+    }
+  });
+  pokemon.evolution_chain_url = speciesJson.evolution_chain.url;
+  pokemon.fetched = true;
 }
 
 async function setupPokemon() {
-  const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/";
-  const speciesUrl = "https://pokeapi.co/api/v2/pokemon-species/";
   let progress = 0;
-  for (let i = 1; i <= maxIndex; i++) {
-    let pokemon = pokemonUrl + i;
-    let pokemonResp = await fetch(pokemon);
-    let pokemonJson = await pokemonResp.json();
-
-    pokemonList[i - 1].abilities = pokemonJson.abilities;
-    pokemonList[i - 1].height = pokemonJson.height;
-    pokemonList[i - 1].weight = pokemonJson.weight;
-    pokemonList[i - 1].base_exp = pokemonJson.base_experience;
-    pokemonList[i - 1].stats = pokemonJson.stats;
-
-    let species = speciesUrl + i;
-    let speciesResp = await fetch(species);
-    let speciesJson = await speciesResp.json();
-
-    pokemonList[i - 1].species = speciesJson.genera["7"].genus;
-
-    flavour_text_entries = speciesJson.flavor_text_entries;
-    // could eventually have multiple FT for each pokemon
-    flavour_text_entries.forEach((entry) => {
-      if (entry.language.name == "en") {
-        pokemonList[i - 1].flavour_text = cleanFlavourText(entry.flavor_text);
-      }
-    });
-    pokemonList[i - 1].evolution_chain_url = speciesJson.evolution_chain.url;
-    progress += 100 / maxIndex;
+  for (let i = 1; i <= 20; i++) {
+    await fetchPokemon(i);
+    progress += 80 / 20;
     updateProgressBar(progress);
+  }
+}
+
+async function setupOtherPokemon() {
+  for (let i = 21; i <= maxIndex; i++) {
+    fetchPokemon(i);
   }
 }
 
@@ -86,9 +101,11 @@ async function setupTypes() {
   const urlAllTypes = "https://pokeapi.co/api/v2/type";
   const allTypesResponse = await fetch(urlAllTypes);
   const allTypesObj = await allTypesResponse.json();
-
+  let progress = 80; 
   for (const type of allTypesObj.results) {
     await setupType(type);
+    progress += 20 / allTypesObj.results.length;
+    updateProgressBar(progress);
   }
 }
 

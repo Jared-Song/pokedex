@@ -510,6 +510,10 @@ input {
     margin-left: 8px;
   }
 
+  .pokemon-type-container {
+    font-size: 8px;
+  }
+
   body {
     padding: 0 5vw;
   }

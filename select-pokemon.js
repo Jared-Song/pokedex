@@ -1,9 +1,12 @@
 let allTypes = {};
 
-function displayPokemonInfo(id) {
+async function displayPokemonInfo(id) {
+  if (!pokemonList[id - 1].fetched) {
+    await fetchPokemon(id - 1);
+  }
   if (window.innerWidth > 1100) {
     slideOutSelectedPokemon();
-
+   
     setTimeout(function () {
       fetchPokemonInfo(id);
     }, 350);
