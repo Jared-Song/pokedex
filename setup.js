@@ -1,9 +1,11 @@
-const POKEAPI = "https://pokeapi.co/api/v2/pokemon/";
-const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/";
-const speciesUrl = "https://pokeapi.co/api/v2/pokemon-species/";
+const POKE_API = "https://pokeapi.co/api/v2/pokemon/";
+const SPECIES_API = "https://pokeapi.co/api/v2/pokemon-species/";
+const TYPE_API = "https://pokeapi.co/api/v2/type/";
+const maxIndex = 649;
+const maxTypeIndex = 18;
+
 let renderedList = [];
 let renderedPokemon = 0;
-const maxIndex = 649;
 let numAvailable = 20; // num pokemon to be rendered
 let numRendered = 0; // index of visible pokemon
 let pokemonList = Array(maxIndex);
@@ -15,7 +17,7 @@ async function setup() {
 }
 
 async function getAllPokemon() {
-  let url = POKEAPI + "?limit=" + maxIndex;
+  let url = POKE_API + "?limit=" + maxIndex;
   let resp = await fetch(url);
   let respJson = await resp.json();
   for (let i = 0; i < respJson.results.length; i++) {
@@ -37,10 +39,10 @@ async function getAllPokemon() {
 }
 
 async function fetchPokemon(id) {
-  let url = pokemonUrl + id;
+  let url = POKE_API + id;
   let pokemonResp = await fetch(url);
   let pokemonJson = await pokemonResp.json();
-  let species = speciesUrl + id;
+  let species = SPECIES_API + id;
 
   let speciesResp = await fetch(species);
   let speciesJson = await speciesResp.json();
@@ -72,19 +74,16 @@ async function setupPokemon() {
 }
 
 async function setupTypes() {
-  const urlAllTypes = "https://pokeapi.co/api/v2/type";
-  const allTypesResponse = await fetch(urlAllTypes);
-  const allTypesObj = await allTypesResponse.json();
   let progress = 0;
-  for (const type of allTypesObj.results) {
-    await setupType(type);
-    progress += 100 / allTypesObj.results.length;
+  for (let i = 1; i <= maxTypeIndex; i++) {
+    await setupType(i);
+    progress += 100 / maxTypeIndex;
     updateProgressBar(progress);
   }
 }
 
-async function setupType(typeObj) {
-  const urlType = typeObj.url;
+async function setupType(id) {
+  const urlType = "https://pokeapi.co/api/v2/type/" + id;
   const typeResponse = await fetch(urlType);
   const type = await typeResponse.json();
 
