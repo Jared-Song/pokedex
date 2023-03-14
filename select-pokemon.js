@@ -157,7 +157,6 @@ function renderPokemonInfo(pokemon) {
 
   let spriteHeight = pokemon.height;
   if (screen.width < 1100) {
-    console.log("small");
     spriteHeight *= 2.5;
     if (spriteHeight <= 10) {
       spriteHeight += 5;
