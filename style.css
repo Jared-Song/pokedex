@@ -245,7 +245,7 @@ input {
 #selected-pokemon-container {
   width: 320px;
   margin: 10px;
-  height: 82vh;
+  height: 72vh;
   position: fixed;
   right: calc(10vw - 20px);
   text-align: center;
@@ -259,12 +259,12 @@ input {
   position: absolute;
   right: 0;
   left: 0;
-  bottom: 77vh;
+  bottom: 67vh;
   margin-right: auto;
   margin-left: auto;
   object-fit: contain;
   max-width: 350px;
-  max-height: 22vh;
+  max-height: 25vh;
 }
 
 #selected-pokemon-info {

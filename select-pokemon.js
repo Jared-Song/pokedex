@@ -155,6 +155,25 @@ function renderPokemonInfo(pokemon) {
   document.getElementById("selected-pokemon-height").innerHTML =
     pokemon.height / 10 + "m";
 
+  let spriteHeight = pokemon.height;
+  if (screen.width < 1100) {
+    console.log("small");
+    spriteHeight *= 2.5;
+    if (spriteHeight <= 10) {
+      spriteHeight += 5;
+    }
+  } else {
+    spriteHeight *= 2;
+  }
+
+  document.getElementById("selected-pokemon-sprite").style.height =
+    spriteHeight + "vh";
+  if (spriteHeight < 20) {
+    document.getElementById("selected-pokemon-sprite").style.bottom = "70vh";
+  } else {
+    document.getElementById("selected-pokemon-sprite").style.bottom = "67vh";
+  }
+
   document.getElementById("selected-pokemon-weight").innerHTML =
     pokemon.weight / 10 + "kg";
 
