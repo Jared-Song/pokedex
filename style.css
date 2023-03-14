@@ -510,6 +510,7 @@ input {
 
   #selected-pokemon-sprite {
     bottom: 67vh;
+    max-height: 30vh;
   }
 
   .pokemon-type-container {
